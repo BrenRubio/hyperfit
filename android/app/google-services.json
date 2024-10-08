@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "315086935227",
+    "project_id": "app-hyperfit",
+    "storage_bucket": "app-hyperfit.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:315086935227:android:9b48a09be3e2022246859e",
+        "android_client_info": {
+          "package_name": "com.hyperfit.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDq7ufNt5W8HSLaGJHYQMgqgPPa1QWreAY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -12,6 +12,8 @@ void main() async {
 }
 
 class inicio_sesion extends StatelessWidget {
+  const inicio_sesion({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -21,6 +23,8 @@ class inicio_sesion extends StatelessWidget {
 }
 
 class InicioSesion extends StatefulWidget {
+  const InicioSesion({super.key});
+
   @override
   _InicioSesionState createState() => _InicioSesionState();
 }
@@ -44,8 +48,10 @@ class _InicioSesionState extends State<InicioSesion> {
 
       if (user != null) {
         // Obtener el nombre del usuario desde Firestore
-        DocumentSnapshot userDoc = await _firestore.collection('01').doc(user.uid).get();
-        String nombre = userDoc.get('nombre'); // Suponiendo que el campo 'nombre' existe en la colección '01'
+        DocumentSnapshot userDoc =
+            await _firestore.collection('01').doc(user.uid).get();
+        String nombre = userDoc.get(
+            'nombre'); // Suponiendo que el campo 'nombre' existe en la colección '01'
 
         // Redirigir a la pantalla principal pasando el nombre
         Navigator.pushReplacement(
@@ -61,11 +67,12 @@ class _InicioSesionState extends State<InicioSesion> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Error'),
-            content: Text('Datos incorrectos. Por favor, verifica tu correo y contraseña.'),
+            title: const Text('Error'),
+            content: const Text(
+                'Datos incorrectos. Por favor, verifica tu correo y contraseña.'),
             actions: <Widget>[
               TextButton(
-                child: Text('Aceptar'),
+                child: const Text('Aceptar'),
                 onPressed: () {
                   Navigator.of(context).pop(); // Cerrar el diálogo
                 },
@@ -81,13 +88,13 @@ class _InicioSesionState extends State<InicioSesion> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
               Colors.black,
-              const Color.fromARGB(255, 18, 40, 51),
+              Color.fromARGB(255, 18, 40, 51),
               Colors.black,
             ],
           ),
@@ -97,7 +104,7 @@ class _InicioSesionState extends State<InicioSesion> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Text(
+              const Text(
                 'Inicio de Sesión',
                 style: TextStyle(
                   fontSize: 36,
@@ -105,46 +112,46 @@ class _InicioSesionState extends State<InicioSesion> {
                   color: Colors.white,
                 ),
               ),
-              SizedBox(height: 60),
+              const SizedBox(height: 60),
               // Campo de correo
               Container(
                 decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 255, 123, 0)
-                      .withOpacity(0.9),
+                  color:
+                      const Color.fromARGB(255, 255, 123, 0).withOpacity(0.9),
                   borderRadius: BorderRadius.circular(10),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withOpacity(0.2),
                       blurRadius: 10,
-                      offset: Offset(0, 4),
+                      offset: const Offset(0, 4),
                     ),
                   ],
                 ),
                 child: TextFormField(
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Correo electrónico',
                     labelStyle: TextStyle(color: Colors.white),
                     border: InputBorder.none,
-                    contentPadding: EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 18),
+                    contentPadding:
+                        EdgeInsets.symmetric(horizontal: 16, vertical: 18),
                   ),
-                  style: TextStyle(color: Colors.white),
+                  style: const TextStyle(color: Colors.white),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               // Campo de contraseña
               Container(
                 decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 255, 123, 0)
-                      .withOpacity(0.9),
+                  color:
+                      const Color.fromARGB(255, 255, 123, 0).withOpacity(0.9),
                   borderRadius: BorderRadius.circular(10),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withOpacity(0.2),
                       blurRadius: 10,
-                      offset: Offset(0, 4),
+                      offset: const Offset(0, 4),
                     ),
                   ],
                 ),
@@ -153,9 +160,9 @@ class _InicioSesionState extends State<InicioSesion> {
                   obscureText: _obscureText,
                   decoration: InputDecoration(
                     labelText: 'Contraseña',
-                    labelStyle: TextStyle(color: Colors.white),
+                    labelStyle: const TextStyle(color: Colors.white),
                     border: InputBorder.none,
-                    contentPadding: EdgeInsets.symmetric(
+                    contentPadding: const EdgeInsets.symmetric(
                         horizontal: 16, vertical: 18),
                     suffixIcon: IconButton(
                       icon: Icon(
@@ -169,13 +176,21 @@ class _InicioSesionState extends State<InicioSesion> {
                       },
                     ),
                   ),
-                  style: TextStyle(color: Colors.white),
+                  style: const TextStyle(color: Colors.white),
                 ),
               ),
-              SizedBox(height: 50),
+              const SizedBox(height: 50),
               // Botón de iniciar sesión
               ElevatedButton(
                 onPressed: _login,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue[900],
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  shadowColor: Colors.black.withOpacity(0.5),
+                  elevation: 10,
+                ),
                 child: Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
@@ -184,17 +199,8 @@ class _InicioSesionState extends State<InicioSesion> {
                     style: TextStyle(fontSize: 18, color: Colors.white),
                   ),
                 ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue[900],
-                  shape: RoundedRectangleBorder(
-                    borderRadius:
-                        BorderRadius.circular(15),
-                  ),
-                  shadowColor: Colors.black.withOpacity(0.5),
-                  elevation: 10,
-                ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -205,19 +211,22 @@ class _InicioSesionState extends State<InicioSesion> {
                         onPressed: () {
                           // Olvidaste contraseña
                         },
+                        style:
+                            TextButton.styleFrom(foregroundColor: Colors.white),
                         child: Text('¿Olvidaste tu contraseña?'),
-                        style: TextButton.styleFrom(foregroundColor: Colors.white),
                       ),
                       TextButton(
                         onPressed: () {
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => registro()), // Navegar a Registro
+                                builder: (context) =>
+                                    Registro()), // Navegar a Registro
                           );
                         },
+                        style:
+                            TextButton.styleFrom(foregroundColor: Colors.white),
                         child: Text('Registrarse'),
-                        style: TextButton.styleFrom(foregroundColor: Colors.white),
                       ),
                     ],
                   )

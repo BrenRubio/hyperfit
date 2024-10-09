@@ -6,7 +6,7 @@ import 'package:flutter_hyperfit/paginas/pantalla_principal.dart'; // Importa tu
 class PerfilUsuario extends StatefulWidget {
   final String nombre; // Recibir nombre como parámetro
 
-  PerfilUsuario({required this.nombre}); // Constructor
+  const PerfilUsuario({super.key, required this.nombre}); // Constructor
 
   @override
   _PerfilUsuarioState createState() => _PerfilUsuarioState();
@@ -38,58 +38,68 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Colors.black,
-              const Color.fromARGB(255, 18, 40, 51),
-              Colors.black,
-            ],
-          ),
-        ),
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                SizedBox(height: 20),
-                CircleAvatar(
-                  radius: 50,
-                  backgroundImage: AssetImage('assets/perfil.jpg'),
-                ),
-                SizedBox(height: 20),
-                _crearCampoTexto('Nombre', _nombreController), // Nombre autocompletado
-                SizedBox(height: 15),
-                _crearCampoTexto('Edad', _edadController, isNumber: true),
-                SizedBox(height: 15),
-                _crearCampoTexto('Peso (kg)', _pesoController, isNumber: true),
-                SizedBox(height: 15),
-                _crearCampoTexto('Estatura (m)', _estaturaController, isNumber: true),
-                SizedBox(height: 15),
-                _crearCampoDropdown('Sexo', ['Masculino', 'Femenino']),
-                SizedBox(height: 30),
-                ElevatedButton(
-                  onPressed: () {
-                    _guardarPerfil();
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-                    child: Text('Guardar Perfil', style: TextStyle(fontSize: 18, color: Colors.white)),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue[900],
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    shadowColor: Colors.black.withOpacity(0.5),
-                    elevation: 10,
-                  ),
-                ),
+      body: SafeArea(
+        // Asegura que el contenido no se superponga con elementos del sistema
+        child: Container(
+          width: double.infinity, // Ocupa todo el ancho disponible
+          height: double.infinity, // Ocupa todo el alto disponible
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Colors.black,
+                Color.fromARGB(255, 18, 40, 51),
+                Colors.black,
               ],
+            ),
+          ),
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                // crossAxisAlignment: CrossAxisAlignment.center, // Puedes probar con CrossAxisAlignment.stretch si es necesario
+                children: <Widget>[
+                  const SizedBox(height: 20),
+                  const CircleAvatar(
+                    radius: 50,
+                    backgroundImage: AssetImage('assets/perfil.jpg'),
+                  ),
+                  const SizedBox(height: 20),
+                  _crearCampoTexto(
+                      'Nombre', _nombreController), // Nombre autocompletado
+                  const SizedBox(height: 15),
+                  _crearCampoTexto('Edad', _edadController, isNumber: true),
+                  const SizedBox(height: 15),
+                  _crearCampoTexto('Peso (kg)', _pesoController,
+                      isNumber: true),
+                  const SizedBox(height: 15),
+                  _crearCampoTexto('Estatura (m)', _estaturaController,
+                      isNumber: true),
+                  const SizedBox(height: 15),
+                  _crearCampoDropdown('Sexo', ['Masculino', 'Femenino']),
+                  const SizedBox(height: 30),
+                  ElevatedButton(
+                    onPressed: () {
+                      _guardarPerfil();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue[900],
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      shadowColor: Colors.black.withOpacity(0.5),
+                      elevation: 10,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 30, vertical: 10),
+                      child: Text('Guardar Perfil',
+                          style: TextStyle(fontSize: 18, color: Colors.white)),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -97,8 +107,11 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
     );
   }
 
-  Widget _crearCampoTexto(String label, TextEditingController controller, {bool isNumber = false}) {
+  Widget _crearCampoTexto(String label, TextEditingController controller,
+      {bool isNumber = false}) {
     return Container(
+      width: double
+          .infinity, // Asegura que el campo ocupe todo el ancho disponible
       decoration: BoxDecoration(
         color: const Color.fromARGB(255, 255, 123, 0).withOpacity(0.9),
         borderRadius: BorderRadius.circular(10),
@@ -106,26 +119,30 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
           BoxShadow(
             color: Colors.black.withOpacity(0.2),
             blurRadius: 10,
-            offset: Offset(0, 4),
+            offset: const Offset(0, 4),
           ),
         ],
       ),
+      margin: const EdgeInsets.symmetric(vertical: 5), // Espaciado vertical
       child: TextFormField(
         controller: controller,
         keyboardType: isNumber ? TextInputType.number : TextInputType.text,
         decoration: InputDecoration(
           labelText: label,
-          labelStyle: TextStyle(color: Colors.white),
+          labelStyle: const TextStyle(color: Colors.white),
           border: InputBorder.none,
-          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
         ),
-        style: TextStyle(color: Colors.white),
+        style: const TextStyle(color: Colors.white),
       ),
     );
   }
 
   Widget _crearCampoDropdown(String label, List<String> opciones) {
     return Container(
+      width: double
+          .infinity, // Asegura que el dropdown ocupe todo el ancho disponible
       decoration: BoxDecoration(
         color: const Color.fromARGB(255, 255, 123, 0).withOpacity(0.9),
         borderRadius: BorderRadius.circular(10),
@@ -133,13 +150,15 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
           BoxShadow(
             color: Colors.black.withOpacity(0.2),
             blurRadius: 10,
-            offset: Offset(0, 4),
+            offset: const Offset(0, 4),
           ),
         ],
       ),
-      padding: EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      margin: const EdgeInsets.symmetric(vertical: 5), // Espaciado vertical
       child: DropdownButtonFormField<String>(
         value: _sexo,
+        isExpanded: true, // Asegura que el dropdown ocupe todo el ancho
         onChanged: (String? nuevoValor) {
           setState(() {
             _sexo = nuevoValor!;
@@ -147,16 +166,17 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
         },
         decoration: InputDecoration(
           labelText: label,
-          labelStyle: TextStyle(color: Colors.white),
+          labelStyle: const TextStyle(color: Colors.white),
           border: InputBorder.none,
         ),
         items: opciones
             .map((opcion) => DropdownMenuItem<String>(
                   value: opcion,
-                  child: Text(opcion, style: TextStyle(color: Colors.black)),
+                  child:
+                      Text(opcion, style: const TextStyle(color: Colors.black)),
                 ))
             .toList(),
-        style: TextStyle(color: Colors.black),
+        style: const TextStyle(color: Colors.black),
       ),
     );
   }
@@ -194,13 +214,14 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
         });
 
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Perfil guardado correctamente')),
+          const SnackBar(content: Text('Perfil guardado correctamente')),
         );
 
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => PantallaPrincipal(nombre: _nombreController.text),
+            builder: (context) =>
+                PantallaPrincipal(nombre: _nombreController.text),
           ),
         );
       }
@@ -217,11 +238,11 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Error'),
+          title: const Text('Error'),
           content: Text(message),
           actions: <Widget>[
             TextButton(
-              child: Text('Aceptar'),
+              child: const Text('Aceptar'),
               onPressed: () {
                 Navigator.of(context).pop(); // Cerrar el diálogo
               },

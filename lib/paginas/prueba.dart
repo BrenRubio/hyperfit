@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -12,17 +14,19 @@ class MyApp extends StatelessWidget {
 }
 
 class ObjetivoEntrenamiento extends StatelessWidget {
+  const ObjetivoEntrenamiento({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
               Colors.black,
-              const Color.fromARGB(255, 18, 40, 51),
+              Color.fromARGB(255, 18, 40, 51),
               Colors.black,
             ],
           ),
@@ -32,8 +36,8 @@ class ObjetivoEntrenamiento extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              SizedBox(height: 50),
-              Text(
+              const SizedBox(height: 50),
+              const Text(
                 'Objetivo',
                 style: TextStyle(
                   fontSize: 32,
@@ -41,7 +45,7 @@ class ObjetivoEntrenamiento extends StatelessWidget {
                   color: Colors.white,
                 ),
               ),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
               Expanded(
                 child: GridView.count(
                   crossAxisCount: 2, // Dos columnas para las tarjetas
@@ -73,7 +77,7 @@ class ObjetivoEntrenamiento extends StatelessWidget {
           BoxShadow(
             color: Colors.black.withOpacity(0.4),
             blurRadius: 10,
-            offset: Offset(0, 9),
+            offset: const Offset(0, 9),
           ),
         ],
       ),
@@ -86,7 +90,7 @@ class ObjetivoEntrenamiento extends StatelessWidget {
               child: Text(
                 titulo,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.orangeAccent,
                   fontSize: 18,
                   fontWeight: FontWeight.bold,

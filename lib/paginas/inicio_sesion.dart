@@ -1,10 +1,17 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hyperfit/paginas/perfil_usuario.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_hyperfit/paginas/pantalla_principal.dart';
 import 'package:flutter_hyperfit/paginas/registro.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-void main() => runApp(MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(inicio_sesion());
+}
 
-class MyApp extends StatelessWidget {
+class inicio_sesion extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -22,6 +29,53 @@ class _InicioSesionState extends State<InicioSesion> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _obscureText = true;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  Future<void> _login() async {
+    try {
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+        email: _emailController.text,
+        password: _passwordController.text,
+      );
+
+      // Obtener el usuario actual
+      User? user = userCredential.user;
+
+      if (user != null) {
+        // Obtener el nombre del usuario desde Firestore
+        DocumentSnapshot userDoc = await _firestore.collection('01').doc(user.uid).get();
+        String nombre = userDoc.get('nombre'); // Suponiendo que el campo 'nombre' existe en la colección '01'
+
+        // Redirigir a la pantalla principal pasando el nombre
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PantallaPrincipal(nombre: nombre),
+          ),
+        );
+      }
+    } catch (e) {
+      // Mostrar alerta si los datos son incorrectos
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Error'),
+            content: Text('Datos incorrectos. Por favor, verifica tu correo y contraseña.'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Aceptar'),
+                onPressed: () {
+                  Navigator.of(context).pop(); // Cerrar el diálogo
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,17 +106,17 @@ class _InicioSesionState extends State<InicioSesion> {
                 ),
               ),
               SizedBox(height: 60),
-              // Campo de correo con estilo de cristal anaranjado traslúcido
+              // Campo de correo
               Container(
                 decoration: BoxDecoration(
                   color: const Color.fromARGB(255, 255, 123, 0)
-                      .withOpacity(0.9), // Color anaranjado traslúcido
+                      .withOpacity(0.9),
                   borderRadius: BorderRadius.circular(10),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withOpacity(0.2),
                       blurRadius: 10,
-                      offset: Offset(0, 4), // Desplazamiento de la sombra
+                      offset: Offset(0, 4),
                     ),
                   ],
                 ),
@@ -74,23 +128,23 @@ class _InicioSesionState extends State<InicioSesion> {
                     labelStyle: TextStyle(color: Colors.white),
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 18), // Tamaño de la caja
+                        horizontal: 16, vertical: 18),
                   ),
                   style: TextStyle(color: Colors.white),
                 ),
               ),
               SizedBox(height: 20),
-              // Campo de contraseña con estilo de cristal anaranjado traslúcido
+              // Campo de contraseña
               Container(
                 decoration: BoxDecoration(
                   color: const Color.fromARGB(255, 255, 123, 0)
-                      .withOpacity(0.9), // Color anaranjado traslúcido
+                      .withOpacity(0.9),
                   borderRadius: BorderRadius.circular(10),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withOpacity(0.2),
                       blurRadius: 10,
-                      offset: Offset(0, 4), // Desplazamiento de la sombra
+                      offset: Offset(0, 4),
                     ),
                   ],
                 ),
@@ -102,7 +156,7 @@ class _InicioSesionState extends State<InicioSesion> {
                     labelStyle: TextStyle(color: Colors.white),
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 18), // Tamaño de la caja
+                        horizontal: 16, vertical: 18),
                     suffixIcon: IconButton(
                       icon: Icon(
                         _obscureText ? Icons.visibility_off : Icons.visibility,
@@ -119,15 +173,9 @@ class _InicioSesionState extends State<InicioSesion> {
                 ),
               ),
               SizedBox(height: 50),
-              // Botón estilizado con sombra y bordes redondeados
+              // Botón de iniciar sesión
               ElevatedButton(
-                onPressed: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => PerfilUsuario()),
-                  );
-                  // Aquí se puede manejar la lógica de inicio de sesión
-                },
+                onPressed: _login,
                 child: Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
@@ -137,45 +185,39 @@ class _InicioSesionState extends State<InicioSesion> {
                   ),
                 ),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue[900], // Color del botón
+                  backgroundColor: Colors.blue[900],
                   shape: RoundedRectangleBorder(
                     borderRadius:
-                        BorderRadius.circular(15), // Bordes redondeados
+                        BorderRadius.circular(15),
                   ),
                   shadowColor: Colors.black.withOpacity(0.5),
-                  elevation: 10, // Sombra del botón
+                  elevation: 10,
                 ),
               ),
               SizedBox(height: 20),
               Row(
-                mainAxisAlignment:
-                    MainAxisAlignment.center, // Centra los textos
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Column(
-                    mainAxisAlignment:
-                        MainAxisAlignment.center, // Centra verticalmente
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       TextButton(
                         onPressed: () {
-                          // Navegar a pantalla de "Olvidaste tu contraseña"
+                          // Olvidaste contraseña
                         },
                         child: Text('¿Olvidaste tu contraseña?'),
-                        style:
-                            TextButton.styleFrom(foregroundColor: Colors.white),
+                        style: TextButton.styleFrom(foregroundColor: Colors.white),
                       ),
                       TextButton(
                         onPressed: () {
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    Registro()), // Navega a InicioSesion
+                                builder: (context) => registro()), // Navegar a Registro
                           );
-                          // Navegar a pantalla de "Registrarse"
                         },
                         child: Text('Registrarse'),
-                        style:
-                            TextButton.styleFrom(foregroundColor: Colors.white),
+                        style: TextButton.styleFrom(foregroundColor: Colors.white),
                       ),
                     ],
                   )

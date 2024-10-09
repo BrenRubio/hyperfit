@@ -1,28 +1,116 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hyperfit/paginas/inicio_sesion.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_hyperfit/paginas/perfil_usuario.dart'; // Importar la pantalla de perfil_usuario
 
-void main() => runApp(MyApp());
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Registro(),
-    );
-  }
-}
-
-class Registro extends StatefulWidget {
+class registro extends StatefulWidget {
   @override
   _RegistroState createState() => _RegistroState();
 }
 
-class _RegistroState extends State<Registro> {
-  final _nameController = TextEditingController();
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  final _confirmPasswordController = TextEditingController();
+class _RegistroState extends State<registro> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
   bool _obscureText = true;
+
+  // Función para validar el formato del correo electrónico
+  bool _isValidEmail(String email) {
+    final emailRegex = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+    return emailRegex.hasMatch(email);
+  }
+
+  // Función para validar la contraseña
+  bool _isValidPassword(String password) {
+    final passwordRegex = RegExp(r'^(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$');
+    return passwordRegex.hasMatch(password);
+  }
+
+  Future<void> _register() async {
+    // Validar campos vacíos
+    if (_nameController.text.trim().isEmpty) {
+      _showAlert('El nombre es obligatorio');
+      return;
+    }
+    if (_emailController.text.trim().isEmpty) {
+      _showAlert('El correo electrónico es obligatorio');
+      return;
+    }
+    if (_passwordController.text.trim().isEmpty) {
+      _showAlert('La contraseña es obligatoria');
+      return;
+    }
+    if (_confirmPasswordController.text.trim().isEmpty) {
+      _showAlert('Debes confirmar tu contraseña');
+      return;
+    }
+    
+    // Validar formato de correo electrónico
+    if (!_isValidEmail(_emailController.text.trim())) {
+      _showAlert('Por favor, ingresa un correo electrónico válido');
+      return;
+    }
+
+    // Validar requisitos de la contraseña
+    if (!_isValidPassword(_passwordController.text.trim())) {
+      _showAlert('La contraseña debe tener al menos 8 caracteres, una mayúscula y un símbolo');
+      return;
+    }
+
+    // Validar coincidencia de contraseñas
+    if (_passwordController.text.trim() != _confirmPasswordController.text.trim()) {
+      _showAlert('Las contraseñas no coinciden');
+      return;
+    }
+
+    try {
+      // Registrar usuario con Firebase Auth
+      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+
+      // Guardar la información del usuario en Firestore
+      await _firestore.collection('01').doc(userCredential.user?.uid).set({
+        'nombre': _nameController.text.trim(),
+        'correo': _emailController.text.trim(),
+      });
+
+      // Redirige a la pantalla de perfil_usuario, pasando el nombre
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => PerfilUsuario(nombre: _nameController.text.trim()),
+        ),
+      );
+    } catch (e) {
+      _showAlert('Error al registrar: ${e.toString()}');
+    }
+  }
+
+  // Método para mostrar alertas
+  void _showAlert(String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Error'),
+          content: Text(message),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Aceptar'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Cerrar el diálogo
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -184,9 +272,7 @@ class _RegistroState extends State<Registro> {
               SizedBox(height: 40),
               // Botón de Registrarse
               ElevatedButton(
-                onPressed: () {
-                  // Lógica para el registro
-                },
+                onPressed: _register,
                 child: Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
@@ -208,13 +294,7 @@ class _RegistroState extends State<Registro> {
               // Botón de Cancelar
               TextButton(
                 onPressed: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => InicioSesion(),
-                    ), // Navega a InicioSesion
-                  );
-                  // Acción de cancelar registro
+                  // Implementa la lógica para cancelar, si es necesario
                 },
                 child: Text('Cancelar'),
                 style: TextButton.styleFrom(foregroundColor: Colors.white),

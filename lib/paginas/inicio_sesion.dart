@@ -2,8 +2,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_hyperfit/paginas/pantalla_principal.dart';
+import 'package:flutter_hyperfit/paginas/perfil_usuario.dart';
 import 'package:flutter_hyperfit/paginas/registro.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_sign_in/google_sign_in.dart'; // Importa Google Sign-In
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,22 +38,71 @@ class _InicioSesionState extends State<InicioSesion> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  // Función para iniciar sesión con Google
+  Future<void> _signInWithGoogle() async {
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      if (googleUser != null) {
+        final GoogleSignInAuthentication googleAuth =
+            await googleUser.authentication;
+        final AuthCredential credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken,
+          idToken: googleAuth.idToken,
+        );
+        UserCredential userCredential =
+            await _auth.signInWithCredential(credential);
+        User? user = userCredential.user;
+
+        if (user != null) {
+          // Verificar si el usuario ya existe en Firestore
+          final userDoc = await _firestore.collection('01').doc(user.uid).get();
+
+          if (!userDoc.exists) {
+            // Si el usuario no existe, guardar la información del usuario en Firestore
+            await _firestore.collection('01').doc(user.uid).set({
+              'nombre': user.displayName,
+              'correo': user.email,
+            });
+
+            // Redirigir a la pantalla de crear perfil, pasando el nombre de Google
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => PerfilUsuario(
+                  nombre: user.displayName ?? '',
+                ),
+              ),
+            );
+          } else {
+            // Si el usuario ya existe, redirigir a la pantalla principal
+            String nombre = userDoc.get('nombre');
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => PantallaPrincipal(nombre: nombre),
+              ),
+            );
+          }
+        }
+      }
+    } catch (e) {
+      _showAlert('Error al iniciar sesión con Google: ${e.toString()}');
+    }
+  }
+
   Future<void> _login() async {
     try {
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
         email: _emailController.text,
         password: _passwordController.text,
       );
-
-      // Obtener el usuario actual
       User? user = userCredential.user;
 
       if (user != null) {
         // Obtener el nombre del usuario desde Firestore
         DocumentSnapshot userDoc =
             await _firestore.collection('01').doc(user.uid).get();
-        String nombre = userDoc.get(
-            'nombre'); // Suponiendo que el campo 'nombre' existe en la colección '01'
+        String nombre = userDoc.get('nombre');
 
         // Redirigir a la pantalla principal pasando el nombre
         Navigator.pushReplacement(
@@ -62,26 +113,29 @@ class _InicioSesionState extends State<InicioSesion> {
         );
       }
     } catch (e) {
-      // Mostrar alerta si los datos son incorrectos
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Error'),
-            content: const Text(
-                'Datos incorrectos. Por favor, verifica tu correo y contraseña.'),
-            actions: <Widget>[
-              TextButton(
-                child: const Text('Aceptar'),
-                onPressed: () {
-                  Navigator.of(context).pop(); // Cerrar el diálogo
-                },
-              ),
-            ],
-          );
-        },
-      );
+      _showAlert(
+          'Datos incorrectos. Por favor, verifica tu correo y contraseña.');
     }
+  }
+
+  void _showAlert(String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Error'),
+          content: Text(message),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Aceptar'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Cerrar el diálogo
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -116,8 +170,7 @@ class _InicioSesionState extends State<InicioSesion> {
               // Campo de correo
               Container(
                 decoration: BoxDecoration(
-                  color:
-                      const Color.fromARGB(255, 255, 123, 0).withOpacity(0.9),
+                  color: const Color.fromARGB(255, 255, 123, 0).withOpacity(0.9),
                   borderRadius: BorderRadius.circular(10),
                   boxShadow: [
                     BoxShadow(
@@ -144,8 +197,7 @@ class _InicioSesionState extends State<InicioSesion> {
               // Campo de contraseña
               Container(
                 decoration: BoxDecoration(
-                  color:
-                      const Color.fromARGB(255, 255, 123, 0).withOpacity(0.9),
+                  color: const Color.fromARGB(255, 255, 123, 0).withOpacity(0.9),
                   borderRadius: BorderRadius.circular(10),
                   boxShadow: [
                     BoxShadow(
@@ -180,7 +232,6 @@ class _InicioSesionState extends State<InicioSesion> {
                 ),
               ),
               const SizedBox(height: 50),
-              // Botón de iniciar sesión
               ElevatedButton(
                 onPressed: _login,
                 style: ElevatedButton.styleFrom(
@@ -194,10 +245,20 @@ class _InicioSesionState extends State<InicioSesion> {
                 child: Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-                  child: Text(
+                  child: const Text(
                     'Iniciar Sesión',
                     style: TextStyle(fontSize: 18, color: Colors.white),
                   ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              // Botón para iniciar sesión con Google
+              ElevatedButton.icon(
+                icon: const Icon(Icons.login),
+                onPressed: _signInWithGoogle,
+                label: const Text('Iniciar sesión con Google'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
                 ),
               ),
               const SizedBox(height: 20),
@@ -211,22 +272,22 @@ class _InicioSesionState extends State<InicioSesion> {
                         onPressed: () {
                           // Olvidaste contraseña
                         },
-                        style:
-                            TextButton.styleFrom(foregroundColor: Colors.white),
-                        child: Text('¿Olvidaste tu contraseña?'),
+                        style: TextButton.styleFrom(
+                            foregroundColor: Colors.white),
+                        child: const Text('¿Olvidaste tu contraseña?'),
                       ),
                       TextButton(
                         onPressed: () {
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    Registro()), // Navegar a Registro
+                              builder: (context) => const Registro(),
+                            ),
                           );
                         },
-                        style:
-                            TextButton.styleFrom(foregroundColor: Colors.white),
-                        child: Text('Registrarse'),
+                        style: TextButton.styleFrom(
+                            foregroundColor: Colors.white),
+                        child: const Text('Registrarse'),
                       ),
                     ],
                   )

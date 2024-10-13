@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart'; // Importa el paquete necesario para los inputFormatters
 import 'package:flutter_hyperfit/paginas/pantalla_principal.dart'; // Importa tu pantalla principal
 
 class PerfilUsuario extends StatefulWidget {
@@ -58,7 +59,6 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
-                // crossAxisAlignment: CrossAxisAlignment.center, // Puedes probar con CrossAxisAlignment.stretch si es necesario
                 children: <Widget>[
                   const SizedBox(height: 20),
                   const CircleAvatar(
@@ -67,15 +67,13 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
                   ),
                   const SizedBox(height: 20),
                   _crearCampoTexto(
-                      'Nombre', _nombreController), // Nombre autocompletado
+                      'Nombre', _nombreController, readOnly: true), // Nombre autocompletado y de solo lectura
                   const SizedBox(height: 15),
-                  _crearCampoTexto('Edad', _edadController, isNumber: true),
+                  _crearCampoTexto('Edad', _edadController, isNumber: true, maxLength: 4),
                   const SizedBox(height: 15),
-                  _crearCampoTexto('Peso (kg)', _pesoController,
-                      isNumber: true),
+                  _crearCampoTexto('Peso (kg)', _pesoController, isNumber: true, maxLength: 4),
                   const SizedBox(height: 15),
-                  _crearCampoTexto('Estatura (m)', _estaturaController,
-                      isNumber: true),
+                  _crearCampoTexto('Estatura (m)', _estaturaController, isNumber: true, maxLength: 4),
                   const SizedBox(height: 15),
                   _crearCampoDropdown('Sexo', ['Masculino', 'Femenino']),
                   const SizedBox(height: 30),
@@ -108,10 +106,9 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
   }
 
   Widget _crearCampoTexto(String label, TextEditingController controller,
-      {bool isNumber = false}) {
+      {bool isNumber = false, bool readOnly = false, int? maxLength}) {
     return Container(
-      width: double
-          .infinity, // Asegura que el campo ocupe todo el ancho disponible
+      width: double.infinity, // Asegura que el campo ocupe todo el ancho disponible
       decoration: BoxDecoration(
         color: const Color.fromARGB(255, 255, 123, 0).withOpacity(0.9),
         borderRadius: BorderRadius.circular(10),
@@ -127,6 +124,13 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
       child: TextFormField(
         controller: controller,
         keyboardType: isNumber ? TextInputType.number : TextInputType.text,
+        readOnly: readOnly, // Hace que el campo sea de solo lectura si está activado
+        inputFormatters: isNumber
+            ? <TextInputFormatter>[
+                FilteringTextInputFormatter.digitsOnly, // Solo permite números
+                LengthLimitingTextInputFormatter(maxLength), // Limita a 4 caracteres
+              ]
+            : null, // No aplica si no es número
         decoration: InputDecoration(
           labelText: label,
           labelStyle: const TextStyle(color: Colors.white),
@@ -141,8 +145,7 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
 
   Widget _crearCampoDropdown(String label, List<String> opciones) {
     return Container(
-      width: double
-          .infinity, // Asegura que el dropdown ocupe todo el ancho disponible
+      width: double.infinity, // Asegura que el dropdown ocupe todo el ancho disponible
       decoration: BoxDecoration(
         color: const Color.fromARGB(255, 255, 123, 0).withOpacity(0.9),
         borderRadius: BorderRadius.circular(10),
@@ -172,8 +175,7 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
         items: opciones
             .map((opcion) => DropdownMenuItem<String>(
                   value: opcion,
-                  child:
-                      Text(opcion, style: const TextStyle(color: Colors.black)),
+                  child: Text(opcion, style: const TextStyle(color: Colors.black)),
                 ))
             .toList(),
         style: const TextStyle(color: Colors.black),
@@ -220,8 +222,7 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) =>
-                PantallaPrincipal(nombre: _nombreController.text),
+            builder: (context) => PantallaPrincipal(nombre: _nombreController.text),
           ),
         );
       }

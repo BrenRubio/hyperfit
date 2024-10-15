@@ -80,7 +80,11 @@ flutter:
     - assets/pilates.jpg
     - assets/estaticos.jpg
     - assets/dinamicos.png
-
+    - assets/pesas.jpg
+    - assets/bandas.jpg
+    - assets/kett.jpg
+    - assets/piernas.jpg
+    
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

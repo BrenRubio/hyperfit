@@ -50,7 +50,7 @@ class PlanFuerza extends StatelessWidget {
                 ),
                 const SizedBox(height: 30),
                 ActivityItem(
-                  imageUrl: 'assets/fuerza.jpg',
+                  imageUrl: 'assets/pesas.jpg',
                   buttonText: 'Levantamiento de pesas',
                   onTap: () {
                     Navigator.push(
@@ -62,7 +62,7 @@ class PlanFuerza extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 ActivityItem(
-                  imageUrl: 'assets/flexibilidad.jpg',
+                  imageUrl: 'assets/bandas.jpg',
                   buttonText: 'Resistencia con bandas',
                   onTap: () {
                     Navigator.push(
@@ -74,7 +74,7 @@ class PlanFuerza extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 ActivityItem(
-                  imageUrl: 'assets/fuerza.jpg',
+                  imageUrl: 'assets/kett.jpg',
                   buttonText: 'Entrenamiento con kettlebells',
                   onTap: () {
                     Navigator.push(
@@ -86,7 +86,7 @@ class PlanFuerza extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 ActivityItem(
-                  imageUrl: 'assets/fuerza.jpg',
+                  imageUrl: 'assets/piernas.jpg',
                   buttonText: 'Prensa de piernas',
                   onTap: () {
                     Navigator.push(

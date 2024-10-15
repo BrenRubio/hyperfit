@@ -50,7 +50,7 @@ class PlanResistencia extends StatelessWidget {
                 ),
                 const SizedBox(height: 30),
                 ActivityItem(
-                  imageUrl: 'assets/fuerza.jpg',
+                  imageUrl: 'assets/circuito.jpg',
                   buttonText: 'Entrenamiento en circuito',
                   onTap: () {
                     Navigator.push(
@@ -62,7 +62,7 @@ class PlanResistencia extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 ActivityItem(
-                  imageUrl: 'assets/flexibilidad.jpg',
+                  imageUrl: 'assets/escalera.jpg',
                   buttonText: 'Entrenamiento en escalera',
                   onTap: () {
                     Navigator.push(
@@ -74,7 +74,7 @@ class PlanResistencia extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 ActivityItem(
-                  imageUrl: 'assets/fuerza.jpg',
+                  imageUrl: 'assets/senderismo.jpg',
                   buttonText: 'Senderismo',
                   onTap: () {
                     Navigator.push(
@@ -86,8 +86,8 @@ class PlanResistencia extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 ActivityItem(
-                  imageUrl: 'assets/fuerza.jpg',
-                  buttonText: 'Remo en máquina',
+                  imageUrl: 'assets/cuerda.jpg',
+                  buttonText: 'Saltar la cuerda',
                   onTap: () {
                     Navigator.push(
                       context,

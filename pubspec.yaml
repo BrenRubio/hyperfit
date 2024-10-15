@@ -72,6 +72,10 @@ flutter:
     - assets/aerobics.jpg
     - assets/caminata.jpg
     - assets/natacion.jpg
+    - assets/circuito.jpg
+    - assets/escalera.jpg
+    - assets/senderismo.jpg
+    - assets/cuerda.jpg
 
   # To add assets to your application, add an assets section, like this:
   # assets:

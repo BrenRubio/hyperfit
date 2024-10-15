@@ -36,7 +36,7 @@ class PlanPeso extends StatelessWidget {
             ),
           ),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            padding: const EdgeInsets.symmetric(horizontal: 45.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -51,7 +51,7 @@ class PlanPeso extends StatelessWidget {
                 ),
                 const SizedBox(height: 30),
                 ActivityItem(
-                  imageUrl: 'assets/fuerza.jpg',
+                  imageUrl: 'assets/ciclismo.jpg',
                   buttonText: 'Ciclismo',
                   onTap: () {
                     Navigator.push(
@@ -62,7 +62,7 @@ class PlanPeso extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 ActivityItem(
-                  imageUrl: 'assets/flexibilidad.jpg',
+                  imageUrl: 'assets/caminata.jpg',
                   buttonText: 'Caminata rápida',
                   onTap: () {
                     Navigator.push(
@@ -74,8 +74,8 @@ class PlanPeso extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 ActivityItem(
-                  imageUrl: 'assets/fuerza.jpg',
-                  buttonText: 'Aeróbics',
+                  imageUrl: 'assets/aerobics.jpg',
+                  buttonText: 'Aeróbicos',
                   onTap: () {
                     Navigator.push(
                       context,
@@ -86,7 +86,7 @@ class PlanPeso extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 ActivityItem(
-                  imageUrl: 'assets/fuerza.jpg',
+                  imageUrl: 'assets/natacion.jpg',
                   buttonText: 'Natación',
                   onTap: () {
                     Navigator.push(

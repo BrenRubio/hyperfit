@@ -35,7 +35,7 @@ class PlanFuerza extends StatelessWidget {
             ),
           ),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            padding: const EdgeInsets.symmetric(horizontal: 45.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

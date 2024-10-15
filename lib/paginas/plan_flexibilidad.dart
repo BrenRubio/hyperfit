@@ -50,7 +50,7 @@ class PlanFlexibilidad extends StatelessWidget {
                 ),
                 const SizedBox(height: 30),
                 ActivityItem(
-                  imageUrl: 'assets/fuerza.jpg',
+                  imageUrl: 'assets/yoga.jpg',
                   buttonText: 'Yoga',
                   onTap: () {
                     Navigator.push(
@@ -62,7 +62,7 @@ class PlanFlexibilidad extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 ActivityItem(
-                  imageUrl: 'assets/flexibilidad.jpg',
+                  imageUrl: 'assets/pilates.jpg',
                   buttonText: 'Pilates',
                   onTap: () {
                     Navigator.push(
@@ -74,7 +74,7 @@ class PlanFlexibilidad extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 ActivityItem(
-                  imageUrl: 'assets/fuerza.jpg',
+                  imageUrl: 'assets/estaticos.jpg',
                   buttonText: 'Estiramientos estáticos',
                   onTap: () {
                     Navigator.push(
@@ -86,7 +86,7 @@ class PlanFlexibilidad extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 ActivityItem(
-                  imageUrl: 'assets/fuerza.jpg',
+                  imageUrl: 'assets/dinamicos.png',
                   buttonText: 'Estiramientos dinámicos',
                   onTap: () {
                     Navigator.push(

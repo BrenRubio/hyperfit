@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_hyperfit/paginas/inicio_sesion.dart'; // Asegúrate de importar tu página de inicio de sesión
+import 'package:flutter_hyperfit/objetivos.dart';
+import 'package:flutter_hyperfit/paginas/inicio_sesion.dart';
+import 'package:flutter_hyperfit/paginas/perfil_usuario.dart'; // Importa PerfilUsuario
 
 class PantallaPrincipal extends StatefulWidget {
   final String nombre; // Variable para almacenar el nombre
@@ -17,40 +19,35 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
       0; // Variable para controlar el índice de la pestaña seleccionada
 
   final List<Widget> _pages = [
-    // Agrega las páginas correspondientes a cada opción aquí
     Center(child: Text('Perfil')),
-    Center(child: Text('Plan')),
+    Center(child: Text('Plan')), // Este será reemplazado por ObjetivoScreen
     Center(child: Text('Progreso')),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Eliminamos el fondo del Scaffold para usar el Container con degradado
       backgroundColor: Colors.transparent,
       appBar: AppBar(
         title: const Text('Pantalla Principal'),
-        backgroundColor: Colors.transparent, // Hacemos la AppBar transparente
-        elevation: 0, // Eliminamos la sombra de la AppBar
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () async {
-              await FirebaseAuth.instance
-                  .signOut(); // Cerrar sesión con Firebase
+              await FirebaseAuth.instance.signOut();
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                      const InicioSesion(), // Redirigir a la pantalla de inicio de sesión
+                  builder: (context) => const InicioSesion(),
                 ),
               );
             },
           ),
         ],
       ),
-      extendBodyBehindAppBar:
-          true, // Permite que el cuerpo se extienda detrás de la AppBar
+      extendBodyBehindAppBar: true,
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -63,46 +60,54 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
             ],
           ),
         ),
-        child: Center(
-          child: Text(
-            'Bienvenido, ${widget.nombre}', // Mostrar el nombre del usuario
-            style: const TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-              shadows: [
-                Shadow(
-                  blurRadius: 10.0,
-                  color: Colors.black54,
-                  offset: Offset(2.0, 2.0),
-                ),
-              ],
-            ),
-          ),
-        ),
+        child: _currentIndex == 1
+            ? ObjetivoScreen() // Navega a ObjetivoScreen cuando el índice es 1
+            : _pages[_currentIndex],
       ),
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex, // Índice de la pestaña seleccionada
+        currentIndex: _currentIndex,
         onTap: (index) {
           setState(() {
-            _currentIndex =
-                index; // Actualiza el índice de la pestaña seleccionada
+            if (index == 0) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => PerfilUsuario(
+                    nombre: 'Perfil',
+                  ), // Navega a PerfilUsuario
+                ),
+              );
+            } else if (index == 1) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      ObjetivoScreen(), // Navega a ObjetivoScreen
+                ),
+              );
+            } else {
+              _currentIndex =
+                  index; // Actualiza el índice de la pestaña seleccionada
+            }
           });
         },
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.person), // Icono de perfil
+            icon: Icon(Icons.person),
             label: 'Perfil',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.fitness_center), // Icono de plan
+            icon: Icon(Icons.fitness_center),
             label: 'Plan',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.assessment), // Icono de progreso
+            icon: Icon(Icons.assessment),
             label: 'Progreso',
           ),
         ],
+        selectedItemColor: Colors.black,
+        unselectedItemColor: Colors.white,
+        backgroundColor: Color.fromARGB(255, 255, 123, 0),
       ),
     );
   }

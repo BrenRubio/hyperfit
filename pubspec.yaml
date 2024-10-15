@@ -64,6 +64,10 @@ flutter:
 
   assets:
     - assets/hyperfit_logo.png
+    - assets/peso.jpg
+    - assets/resistencia.jpg
+    - assets/flexibilidad.jpg
+    - assets/fuerza.jpg
 
   # To add assets to your application, add an assets section, like this:
   # assets:

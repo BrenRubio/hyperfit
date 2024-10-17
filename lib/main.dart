@@ -33,7 +33,7 @@ class _loadingState extends State<loading> {
   @override
   void initState() {
     Future.delayed(
-      const Duration(milliseconds: 4000),
+      const Duration(milliseconds: 2000),
       () => Navigator.push(
           context, MaterialPageRoute(builder: (context) => InicioSesion())),
     );

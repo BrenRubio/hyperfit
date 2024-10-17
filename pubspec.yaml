@@ -39,6 +39,7 @@ dependencies:
   firebase_auth: ^5.3.1
   google_sign_in: ^6.2.1
   cloud_firestore: ^5.4.4
+  image_picker: ^1.1.2
 
 dev_dependencies:
   flutter_test:
@@ -64,6 +65,7 @@ flutter:
 
   assets:
     - assets/hyperfit_logo.png
+    - assets/perfil.png
     - assets/peso.jpg
     - assets/resistencia.jpg
     - assets/flexibilidad.jpg
@@ -84,6 +86,7 @@ flutter:
     - assets/bandas.jpg
     - assets/kett.jpg
     - assets/piernas.jpg
+    
     
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

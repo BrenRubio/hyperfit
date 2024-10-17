@@ -39,8 +39,18 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false, // Quita la flecha de regreso
+        title: Center(
+          child: const Text(
+            'Perfil usuario',
+            style: TextStyle(
+                color: Colors.white), // Cambia el color del texto aquí
+          ),
+        ),
+        backgroundColor: Colors.black,
+      ),
       body: SafeArea(
-        // Asegura que el contenido no se superponga con elementos del sistema
         child: Container(
           width: double.infinity, // Ocupa todo el ancho disponible
           height: double.infinity, // Ocupa todo el alto disponible
@@ -60,21 +70,25 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: <Widget>[
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 2),
                   const CircleAvatar(
                     radius: 50,
-                    backgroundImage: AssetImage('assets/perfil.jpg'),
+                    backgroundImage: AssetImage('assets/perfil.png'),
                   ),
                   const SizedBox(height: 20),
-                  _crearCampoTexto(
-                      'Nombre', _nombreController, readOnly: true), // Nombre autocompletado y de solo lectura
-                  const SizedBox(height: 15),
-                  _crearCampoTexto('Edad', _edadController, isNumber: true, maxLength: 4),
-                  const SizedBox(height: 15),
-                  _crearCampoTexto('Peso (kg)', _pesoController, isNumber: true, maxLength: 4),
-                  const SizedBox(height: 15),
-                  _crearCampoTexto('Estatura (m)', _estaturaController, isNumber: true, maxLength: 4),
-                  const SizedBox(height: 15),
+                  _crearCampoTexto('Nombre', _nombreController,
+                      readOnly:
+                          true), // Nombre autocompletado y de solo lectura
+                  const SizedBox(height: 10),
+                  _crearCampoTexto('Edad', _edadController,
+                      isNumber: true, maxLength: 3),
+                  const SizedBox(height: 10),
+                  _crearCampoTexto('Peso (Kg)', _pesoController,
+                      isNumber: true, maxLength: 4),
+                  const SizedBox(height: 10),
+                  _crearCampoTexto('Estatura (Mtrs)', _estaturaController,
+                      isNumber: true, maxLength: 4),
+                  const SizedBox(height: 05),
                   _crearCampoDropdown('Sexo', ['Masculino', 'Femenino']),
                   const SizedBox(height: 30),
                   ElevatedButton(
@@ -92,7 +106,7 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 30, vertical: 10),
-                      child: Text('Guardar Perfil',
+                      child: Text('Guardar',
                           style: TextStyle(fontSize: 18, color: Colors.white)),
                     ),
                   ),
@@ -108,7 +122,8 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
   Widget _crearCampoTexto(String label, TextEditingController controller,
       {bool isNumber = false, bool readOnly = false, int? maxLength}) {
     return Container(
-      width: double.infinity, // Asegura que el campo ocupe todo el ancho disponible
+      width: double
+          .infinity, // Asegura que el campo ocupe todo el ancho disponible
       decoration: BoxDecoration(
         color: const Color.fromARGB(255, 255, 123, 0).withOpacity(0.9),
         borderRadius: BorderRadius.circular(10),
@@ -124,11 +139,13 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
       child: TextFormField(
         controller: controller,
         keyboardType: isNumber ? TextInputType.number : TextInputType.text,
-        readOnly: readOnly, // Hace que el campo sea de solo lectura si está activado
+        readOnly:
+            readOnly, // Hace que el campo sea de solo lectura si está activado
         inputFormatters: isNumber
             ? <TextInputFormatter>[
                 FilteringTextInputFormatter.digitsOnly, // Solo permite números
-                LengthLimitingTextInputFormatter(maxLength), // Limita a 4 caracteres
+                LengthLimitingTextInputFormatter(
+                    maxLength), // Limita a 4 caracteres
               ]
             : null, // No aplica si no es número
         decoration: InputDecoration(
@@ -136,7 +153,7 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
           labelStyle: const TextStyle(color: Colors.white),
           border: InputBorder.none,
           contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+              const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
         ),
         style: const TextStyle(color: Colors.white),
       ),
@@ -145,7 +162,8 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
 
   Widget _crearCampoDropdown(String label, List<String> opciones) {
     return Container(
-      width: double.infinity, // Asegura que el dropdown ocupe todo el ancho disponible
+      width: double
+          .infinity, // Asegura que el dropdown ocupe todo el ancho disponible
       decoration: BoxDecoration(
         color: const Color.fromARGB(255, 255, 123, 0).withOpacity(0.9),
         borderRadius: BorderRadius.circular(10),
@@ -175,7 +193,8 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
         items: opciones
             .map((opcion) => DropdownMenuItem<String>(
                   value: opcion,
-                  child: Text(opcion, style: const TextStyle(color: Colors.black)),
+                  child:
+                      Text(opcion, style: const TextStyle(color: Colors.black)),
                 ))
             .toList(),
         style: const TextStyle(color: Colors.black),
@@ -222,7 +241,8 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => PantallaPrincipal(nombre: _nombreController.text),
+            builder: (context) =>
+                PantallaPrincipal(nombre: _nombreController.text),
           ),
         );
       }

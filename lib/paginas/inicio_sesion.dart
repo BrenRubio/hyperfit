@@ -170,7 +170,8 @@ class _InicioSesionState extends State<InicioSesion> {
               // Campo de correo
               Container(
                 decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 255, 123, 0).withOpacity(0.9),
+                  color:
+                      const Color.fromARGB(255, 255, 123, 0).withOpacity(0.9),
                   borderRadius: BorderRadius.circular(10),
                   boxShadow: [
                     BoxShadow(
@@ -197,7 +198,8 @@ class _InicioSesionState extends State<InicioSesion> {
               // Campo de contraseña
               Container(
                 decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 255, 123, 0).withOpacity(0.9),
+                  color:
+                      const Color.fromARGB(255, 255, 123, 0).withOpacity(0.9),
                   borderRadius: BorderRadius.circular(10),
                   boxShadow: [
                     BoxShadow(
@@ -272,8 +274,8 @@ class _InicioSesionState extends State<InicioSesion> {
                         onPressed: () {
                           // Olvidaste contraseña
                         },
-                        style: TextButton.styleFrom(
-                            foregroundColor: Colors.white),
+                        style:
+                            TextButton.styleFrom(foregroundColor: Colors.white),
                         child: const Text('¿Olvidaste tu contraseña?'),
                       ),
                       TextButton(
@@ -285,8 +287,8 @@ class _InicioSesionState extends State<InicioSesion> {
                             ),
                           );
                         },
-                        style: TextButton.styleFrom(
-                            foregroundColor: Colors.white),
+                        style:
+                            TextButton.styleFrom(foregroundColor: Colors.white),
                         child: const Text('Registrarse'),
                       ),
                     ],

@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Plan - Perder peso',
+      title: 'Plan - Resistencia',
       home: PlanPeso(),
     );
   }
@@ -56,7 +56,8 @@ class PlanPeso extends StatelessWidget {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => Ciclismo()),
+                      MaterialPageRoute(
+                          builder: (context) => ActividadesScreen()),
                     );
                   },
                 ),
@@ -75,7 +76,7 @@ class PlanPeso extends StatelessWidget {
                 const SizedBox(height: 8),
                 ActivityItem(
                   imageUrl: 'assets/aerobics.jpg',
-                  buttonText: 'Aeróbicos',
+                  buttonText: 'Aeróbics',
                   onTap: () {
                     Navigator.push(
                       context,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 
 void main() {
   runApp(MyApp());
@@ -8,206 +9,288 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Ciclismo(),
+      title: 'Fitness App',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: ActividadesScreen(),
     );
   }
 }
 
-class Ciclismo extends StatefulWidget {
-  @override
-  _CiclismoState createState() => _CiclismoState();
+class Actividad {
+  String nombre;
+  String descripcion;
+  int duracion; // en minutos
+  String intensidad;
+  int calorias; // calorías quemadas
+
+  Actividad(this.nombre, this.descripcion, this.duracion, this.intensidad,
+      this.calorias);
 }
 
-class _CiclismoState extends State<Ciclismo> {
-  // Lista de actividades con títulos y descripciones únicas
-  final List<Activity> activities = [
-    Activity(
-        title: 'Ciclismo por la montaña',
-        description:
-            'Explora rutas montañosas y disfruta de vistas espectaculares.'),
-    Activity(
-        title: 'Ciclismo urbano',
-        description: 'Recorre la ciudad y descubre lugares nuevos.'),
-    Activity(
-        title: 'Ciclismo de ruta',
-        description: 'Entrenamiento en carreteras largas y rectas.'),
-    Activity(
-        title: 'Ciclismo de montaña',
-        description: 'Desafíos en terrenos irregulares y senderos.'),
-    Activity(
-        title: 'Ciclismo nocturno',
-        description: 'Disfruta de paseos en bicicleta bajo la luna.'),
-    Activity(
-        title: 'Ciclismo de competición',
-        description: 'Entrena para competencias y mejora tus habilidades.'),
-    Activity(
-        title: 'Ciclismo recreativo',
-        description: 'Un paseo relajante para disfrutar con amigos.'),
-    Activity(
-        title: 'Ciclismo en grupo',
-        description: 'Salidas organizadas con otros ciclistas.'),
-    Activity(
-        title: 'Ciclismo en familia',
-        description: 'Paseos en bicicleta para toda la familia.'),
-    Activity(
-        title: 'Ciclismo de larga distancia',
-        description: 'Desafía tus límites con rutas largas.'),
-    Activity(
-        title: 'Ciclismo de velocidad',
-        description: 'Mejora tus tiempos en distancias cortas.'),
-    Activity(
-        title: 'Ciclismo en senderos',
-        description: 'Explora caminos naturales y escénicos.'),
-    Activity(
-        title: 'Ciclismo por la costa',
-        description: 'Disfruta de vistas al mar mientras pedaleas.'),
-    Activity(
-        title: 'Ciclismo en el parque',
-        description: 'Relájate y pedalea en un ambiente tranquilo.'),
-    Activity(
-        title: 'Ciclismo con amigos',
-        description: 'Diviértete mientras haces ejercicio en buena compañía.'),
-    Activity(
-        title: 'Ciclismo por la naturaleza',
-        description: 'Conéctate con la naturaleza mientras pedaleas.'),
-    Activity(
-        title: 'Ciclismo en el campo',
-        description: 'Explora caminos rurales y paisajes hermosos.'),
-    Activity(
-        title: 'Ciclismo en caminos de tierra',
-        description: 'Desafía tu habilidad en terrenos de tierra.'),
-    Activity(
-        title: 'Ciclismo de montaña extremo',
-        description: 'Para los aventureros que buscan retos extremos.'),
-    Activity(
-        title: 'Ciclismo para principiantes',
-        description: 'Una introducción suave al ciclismo.'),
-    Activity(
-        title: 'Ciclismo de downhill',
-        description: 'Descenso rápido en colinas y montañas.'),
-    Activity(
-        title: 'Ciclismo en climas fríos',
-        description:
-            'Disfruta del ciclismo en invierno con el equipo adecuado.'),
-    Activity(
-        title: 'Ciclismo con música',
-        description: 'Escucha tu música favorita mientras pedaleas.'),
-    Activity(
-        title: 'Ciclismo por senderos forestales',
-        description: 'Explora la tranquilidad de los bosques.'),
-    Activity(
-        title: 'Ciclismo en carreteras secundarias',
-        description: 'Tranquilidad en rutas menos transitadas.'),
-    Activity(
-        title: 'Ciclismo en ferias locales',
-        description: 'Visita ferias y mercados locales en bicicleta.'),
-    Activity(
-        title: 'Ciclismo por rutas históricas',
-        description: 'Recorre caminos con historia y patrimonio.'),
-    Activity(
-        title: 'Ciclismo a lo largo de ríos',
-        description: 'Disfruta de vistas panorámicas a lo largo de un río.'),
-    Activity(
-        title: 'Ciclismo de entrenamiento en intervalos',
-        description: 'Mejora tu resistencia con entrenamientos de intervalos.'),
-    Activity(
-        title: 'Ciclismo de montaña en verano',
-        description: 'Aprovecha el clima cálido para explorar senderos.'),
-    Activity(
-        title: 'Ciclismo con paradas',
-        description: 'Disfruta de paradas en lugares interesantes.'),
-    Activity(
-        title: 'Ciclismo en eventos benéficos',
-        description: 'Participa en eventos de ciclismo para una causa.'),
-    Activity(
-        title: 'Ciclismo en vacaciones',
-        description: 'Explora nuevos lugares en bicicleta durante tus viajes.'),
-    Activity(
-        title: 'Ciclismo por la noche con luces',
-        description: 'Asegúrate de ser visible mientras pedaleas de noche.'),
-    Activity(
-        title: 'Ciclismo con entrenamiento de fuerza',
-        description: 'Combina ciclismo con ejercicios de fuerza.'),
-    Activity(
-        title: 'Ciclismo de aventura',
-        description: 'Lleva tu bicicleta a nuevas aventuras y desafíos.'),
-    Activity(
-        title: 'Ciclismo en carreteras escénicas',
-        description:
-            'Disfruta de la belleza de la naturaleza mientras pedaleas.'),
+class ActividadesScreen extends StatelessWidget {
+  final List<Actividad> actividades = [
+    Actividad("Ciclismo", "Ciclismo en exteriores", 60, "Media", 300),
+    Actividad("Caminata rápida", "Caminata en el parque", 45, "Baja", 250),
+    Actividad("Aeróbicos", "Sesión de aeróbicos en casa", 30, "Alta", 350),
+    Actividad("Natación", "Nadar en la piscina", 60, "Media", 400),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Lista de Actividades de Ciclismo'),
-        backgroundColor: Colors.black,
+        title: Text('Actividades'),
+        backgroundColor: Color.fromARGB(255, 21, 101, 192), // Azul vibrante
       ),
       body: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
             colors: [
               Colors.black,
               Color.fromARGB(255, 18, 40, 51),
               Colors.black,
             ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
           ),
         ),
         child: ListView.builder(
-          itemCount: activities.length,
+          itemCount: actividades.length,
           itemBuilder: (context, index) {
-            return Container(
-              margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-              decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 255, 123, 0).withOpacity(0.9),
-                borderRadius: BorderRadius.circular(15),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: CheckboxListTile(
-                title: Text(
-                  activities[index].title,
-                  style: const TextStyle(
-                      fontWeight: FontWeight.bold, color: Colors.white),
-                ),
-                subtitle: Text(
-                  activities[index].description,
-                  style: const TextStyle(color: Colors.white),
-                ),
-                value: activities[index].isCompleted,
-                activeColor: Colors.green,
-                checkColor: Colors.black,
-                onChanged: (bool? value) {
-                  setState(() {
-                    activities[index].isCompleted = value ?? false;
-                  });
-                },
-              ),
-            );
+            final actividad = actividades[index];
+            return _buildCard(context, actividad);
           },
         ),
       ),
     );
   }
+
+  Widget _buildCard(BuildContext context, Actividad actividad) {
+    return Container(
+      margin:
+          EdgeInsets.all(8), // Reducir margen para hacer la tarjeta más pequeña
+      decoration: BoxDecoration(
+        color: Color.fromARGB(255, 255, 123, 0).withOpacity(0.9),
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black54,
+            offset: Offset(0, 2), // Menos sombra para un diseño más compacto
+            blurRadius: 10,
+          ),
+        ],
+      ),
+      child: ListTile(
+        contentPadding: EdgeInsets.symmetric(
+            vertical: 12, horizontal: 16), // Ajustar padding
+        title: Text(
+          actividad.nombre,
+          style: TextStyle(
+            fontSize: 20, // Tamaño de fuente más pequeño
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: 4),
+            Text(
+              actividad.descripcion,
+              style: TextStyle(
+                fontSize: 14, // Tamaño de fuente más pequeño
+                fontStyle: FontStyle.italic,
+                color: Colors.white70,
+              ),
+            ),
+            SizedBox(height: 8),
+            _buildInfoRow('Intensidad:', actividad.intensidad),
+            _buildInfoRow('Calorías:', '${actividad.calorias} kcal'),
+            _buildInfoRow('Duración:', '${actividad.duracion} min'),
+          ],
+        ),
+        onTap: () => _mostrarConfirmacion(context, actividad),
+      ),
+    );
+  }
+
+  Widget _buildInfoRow(String title, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 14, // Tamaño de fuente más pequeño
+              color: Colors.white,
+            ),
+          ),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 14, // Tamaño de fuente más pequeño
+              color: Colors.lightGreenAccent,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _mostrarConfirmacion(BuildContext context, Actividad actividad) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Iniciar Actividad'),
+          content: Text('¿Deseas realizar ${actividad.nombre}?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        TemporizadorScreen(actividad: actividad),
+                  ),
+                );
+              },
+              child: Text('Sí'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('No'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 }
 
-// Clase para representar una actividad
-class Activity {
-  final String title;
-  final String description;
-  bool isCompleted;
+class TemporizadorScreen extends StatefulWidget {
+  final Actividad actividad;
 
-  Activity({
-    required this.title,
-    required this.description,
-    this.isCompleted = false,
-  });
+  TemporizadorScreen({required this.actividad});
+
+  @override
+  _TemporizadorScreenState createState() => _TemporizadorScreenState();
+}
+
+class _TemporizadorScreenState extends State<TemporizadorScreen> {
+  int segundosRestantes = 0;
+  late Timer _timer;
+  double progreso = 1.0;
+
+  @override
+  void initState() {
+    super.initState();
+    segundosRestantes = widget.actividad.duracion * 60;
+    _iniciarTemporizador();
+  }
+
+  void _iniciarTemporizador() {
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (segundosRestantes > 0) {
+        setState(() {
+          segundosRestantes--;
+          progreso = segundosRestantes / (widget.actividad.duracion * 60);
+        });
+      } else {
+        _timer.cancel();
+        _mostrarActividadCompletada();
+      }
+    });
+  }
+
+  void _mostrarActividadCompletada() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Actividad Completada'),
+          content:
+              Text('Has completado la actividad: ${widget.actividad.nombre}'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pop(); // Volver a la pantalla anterior
+              },
+              child: Text('Aceptar'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Temporizador: ${widget.actividad.nombre}'),
+        backgroundColor: Color.fromARGB(255, 21, 101, 192), // Azul vibrante
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Colors.black,
+              Color.fromARGB(255, 18, 40, 51),
+              Colors.black,
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Tiempo restante: ${_formatearTiempo(segundosRestantes)}',
+                style: TextStyle(
+                    fontSize: 28,
+                    color: Colors.orangeAccent), // Color anaranjado
+              ),
+              SizedBox(height: 20),
+              CircularProgressIndicator(
+                value: progreso, // Valor entre 0 y 1
+                strokeWidth: 8,
+                backgroundColor: Colors.grey,
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
+              ),
+              SizedBox(height: 20),
+              Text(
+                'Duración total: ${widget.actividad.duracion} minutos',
+                style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.orangeAccent), // Color anaranjado
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  String _formatearTiempo(int segundos) {
+    int minutos = segundos ~/ 60;
+    int segundosRestantes = segundos % 60;
+    return '${minutos.toString().padLeft(2, '0')}:${segundosRestantes.toString().padLeft(2, '0')}';
+  }
 }

@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: ActividadesCiclismo(),
+      home: ActividadesAerobics(),
     );
   }
 }
@@ -29,7 +29,7 @@ class Actividad {
       this.calorias);
 }
 
-class ActividadesCiclismo extends StatelessWidget {
+class ActividadesAerobics extends StatelessWidget {
   final List<Actividad> actividades = [
     Actividad("Actividad1", "Descripción", 1, "Baja", 300),
     Actividad("Actividad2", "Descripción", 45, "Media", 250),

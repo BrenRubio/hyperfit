@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hyperfit/paginas/peso_act/aerobics.dart';
+import 'package:flutter_hyperfit/paginas/peso_act/caminata.dart';
 import 'package:flutter_hyperfit/paginas/peso_act/ciclismo.dart';
-import 'package:flutter_hyperfit/paginas/peso_act/general.dart';
+import 'package:flutter_hyperfit/paginas/peso_act/natacion.dart';
 
 void main() {
   runApp(MyApp());
@@ -57,7 +59,7 @@ class PlanPeso extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => ActividadesScreen()),
+                          builder: (context) => ActividadesCiclismo()),
                     );
                   },
                 ),
@@ -69,7 +71,7 @@ class PlanPeso extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => DetalleActividad1()),
+                          builder: (context) => ActividadesCaminata()),
                     );
                   },
                 ),
@@ -81,7 +83,7 @@ class PlanPeso extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => DetalleActividad1()),
+                          builder: (context) => ActividadesAerobics()),
                     );
                   },
                 ),
@@ -93,7 +95,7 @@ class PlanPeso extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => DetalleActividad1()),
+                          builder: (context) => ActividadesNatacion()),
                     );
                   },
                 ),

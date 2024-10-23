@@ -37,6 +37,8 @@ class ActividadesAerobics extends StatelessWidget {
     Actividad("Actividad4", "Descripción", 60, "Media", 400),
   ];
 
+  ActividadesAerobics({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

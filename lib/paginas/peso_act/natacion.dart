@@ -6,6 +6,8 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -37,12 +39,14 @@ class ActividadesNatacion extends StatelessWidget {
     Actividad("Actividad4", "Descripción", 60, "Media", 400),
   ];
 
+  ActividadesNatacion({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(
-          child: const Text(
+        title: const Center(
+          child: Text(
             'Actividades',
             style: TextStyle(
                 color: Colors.white), // Cambia el color del texto aquí
@@ -51,7 +55,7 @@ class ActividadesNatacion extends StatelessWidget {
         backgroundColor: Colors.black, // Azul vibrante
       ),
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [
               Colors.black,
@@ -75,12 +79,12 @@ class ActividadesNatacion extends StatelessWidget {
 
   Widget _buildCard(BuildContext context, Actividad actividad) {
     return Container(
-      margin:
-          EdgeInsets.all(8), // Reducir margen para hacer la tarjeta más pequeña
+      margin: const EdgeInsets.all(
+          8), // Reducir margen para hacer la tarjeta más pequeña
       decoration: BoxDecoration(
-        color: Color.fromARGB(255, 255, 123, 0).withOpacity(0.9),
+        color: const Color.fromARGB(255, 255, 123, 0).withOpacity(0.9),
         borderRadius: BorderRadius.circular(10),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             color: Colors.black54,
             offset: Offset(0, 2), // Menos sombra para un diseño más compacto
@@ -89,11 +93,11 @@ class ActividadesNatacion extends StatelessWidget {
         ],
       ),
       child: ListTile(
-        contentPadding: EdgeInsets.symmetric(
+        contentPadding: const EdgeInsets.symmetric(
             vertical: 12, horizontal: 16), // Ajustar padding
         title: Text(
           actividad.nombre,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 20, // Tamaño de fuente más pequeño
             fontWeight: FontWeight.bold,
             color: Color.fromARGB(255, 20, 0, 133),
@@ -102,16 +106,16 @@ class ActividadesNatacion extends StatelessWidget {
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 4),
+            const SizedBox(height: 4),
             Text(
               actividad.descripcion,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 14, // Tamaño de fuente más pequeño
                 fontStyle: FontStyle.italic,
                 color: Colors.white70,
               ),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             _buildInfoRow('Intensidad:', actividad.intensidad),
             _buildInfoRow('Calorías:', '${actividad.calorias} kcal'),
             _buildInfoRow('Duración:', '${actividad.duracion} min'),
@@ -130,14 +134,14 @@ class ActividadesNatacion extends StatelessWidget {
         children: [
           Text(
             title,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 14, // Tamaño de fuente más pequeño
               color: Colors.white,
             ),
           ),
           Text(
             value,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 14, // Tamaño de fuente más pequeño
               color: Color.fromARGB(255, 0, 17, 65),
               fontWeight: FontWeight.bold,
@@ -153,7 +157,7 @@ class ActividadesNatacion extends StatelessWidget {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Iniciar Actividad'),
+          title: const Text('Iniciar Actividad'),
           content: Text('¿Deseas realizar ${actividad.nombre}?'),
           actions: [
             TextButton(
@@ -166,13 +170,13 @@ class ActividadesNatacion extends StatelessWidget {
                   ),
                 );
               },
-              child: Text('Sí'),
+              child: const Text('Sí'),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('No'),
+              child: const Text('No'),
             ),
           ],
         );
@@ -184,7 +188,7 @@ class ActividadesNatacion extends StatelessWidget {
 class TemporizadorScreen extends StatefulWidget {
   final Actividad actividad;
 
-  TemporizadorScreen({required this.actividad});
+  const TemporizadorScreen({super.key, required this.actividad});
 
   @override
   _TemporizadorScreenState createState() => _TemporizadorScreenState();
@@ -203,7 +207,7 @@ class _TemporizadorScreenState extends State<TemporizadorScreen> {
   }
 
   void _iniciarTemporizador() {
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (segundosRestantes > 0) {
         setState(() {
           segundosRestantes--;
@@ -221,7 +225,7 @@ class _TemporizadorScreenState extends State<TemporizadorScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Actividad Completada'),
+          title: const Text('Actividad Completada'),
           content:
               Text('Has completado la actividad: ${widget.actividad.nombre}'),
           actions: [
@@ -230,7 +234,7 @@ class _TemporizadorScreenState extends State<TemporizadorScreen> {
                 Navigator.of(context).pop();
                 Navigator.of(context).pop(); // Volver a la pantalla anterior
               },
-              child: Text('Aceptar'),
+              child: const Text('Aceptar'),
             ),
           ],
         );
@@ -251,10 +255,10 @@ class _TemporizadorScreenState extends State<TemporizadorScreen> {
         title: Text(
           'Temporizador: ${widget.actividad.nombre}',
         ),
-        backgroundColor: Color.fromARGB(255, 0, 0, 0), // Azul vibrante
+        backgroundColor: const Color.fromARGB(255, 0, 0, 0), // Azul vibrante
       ),
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [
               Colors.black,
@@ -271,22 +275,22 @@ class _TemporizadorScreenState extends State<TemporizadorScreen> {
             children: [
               Text(
                 'Tiempo restante: ${_formatearTiempo(segundosRestantes)}',
-                style: TextStyle(
+                style: const TextStyle(
                     fontSize: 28,
                     color:
                         Color.fromARGB(255, 255, 123, 0)), // Color anaranjado
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               CircularProgressIndicator(
                 value: progreso, // Valor entre 0 y 1
                 strokeWidth: 8,
                 backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
+                valueColor: const AlwaysStoppedAnimation<Color>(Colors.green),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Text(
                 'Duración total: ${widget.actividad.duracion} minutos',
-                style: TextStyle(
+                style: const TextStyle(
                     fontSize: 20,
                     color:
                         Color.fromARGB(255, 255, 123, 0)), // Color anaranjado

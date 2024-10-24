@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_hyperfit/paginas/pantalla_principal.dart';
-// Para los inputFormatters
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 class PerfilUsuario extends StatefulWidget {
   const PerfilUsuario({super.key, required String nombre});
@@ -20,6 +20,7 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
   final _estaturaController = TextEditingController();
   String _sexo = 'Masculino'; // Valor predeterminado
   bool _modoEdicion = false; // Controla si se puede editar o no
+  File? _imageFile; // Para almacenar la imagen seleccionada
 
   @override
   void initState() {
@@ -60,6 +61,9 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
           _estaturaController.text =
               snapshot.data()?['estatura']?.toString() ?? '';
           _sexo = snapshot.data()?['sexo'] ?? 'Masculino';
+          _imageFile = snapshot.data()?['imageUrl'] != null
+              ? File(snapshot.data()!['imageUrl'])
+              : null; // Cargar la imagen desde Firestore
           setState(() {}); // Refresca la UI
 
           // Muestra un mensaje indicando que se necesita modificar el perfil
@@ -99,6 +103,22 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
     );
   }
 
+  Future<void> _pickImage() async {
+    final ImagePicker _picker = ImagePicker();
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _imageFile = File(pickedFile.path);
+      });
+    }
+  }
+
+  void _removeImage() {
+    setState(() {
+      _imageFile = null; // Quitar la imagen del perfil
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -135,9 +155,17 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
                 child: Column(
                   children: <Widget>[
                     const SizedBox(height: 2),
-                    const CircleAvatar(
-                      radius: 50,
-                      backgroundImage: AssetImage('assets/perfil.png'),
+                    GestureDetector(
+                      onTap: _modoEdicion
+                          ? _pickImage
+                          : null, // Solo permite seleccionar imagen en modo edición
+                      child: CircleAvatar(
+                        radius: 50,
+                        backgroundImage: _imageFile != null
+                            ? FileImage(_imageFile!)
+                            : const AssetImage('assets/perfil.png')
+                                as ImageProvider,
+                      ),
                     ),
                     const SizedBox(height: 20),
                     _crearCampoTexto('Nombre', _nombreController,
@@ -147,10 +175,10 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
                         isNumber: true, maxLength: 3, readOnly: !_modoEdicion),
                     const SizedBox(height: 10),
                     _crearCampoTexto('Peso (Kg)', _pesoController,
-                        isNumber: true, maxLength: 4, readOnly: !_modoEdicion),
+                        isNumber: true, maxLength: 3, readOnly: !_modoEdicion),
                     const SizedBox(height: 10),
-                    _crearCampoTexto('Estatura (Mtrs)', _estaturaController,
-                        isNumber: true, maxLength: 4, readOnly: !_modoEdicion),
+                    _crearCampoTexto('Estatura (Cm)', _estaturaController,
+                        isNumber: true, maxLength: 3, readOnly: !_modoEdicion),
                     const SizedBox(height: 5),
                     _crearCampoDropdown('Sexo', ['Masculino', 'Femenino'],
                         readOnly: !_modoEdicion),
@@ -206,6 +234,27 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
                         ),
                       ),
                     ),
+                    const SizedBox(height: 10),
+                    if (_modoEdicion && _imageFile != null)
+                      ElevatedButton(
+                        onPressed: _removeImage,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          shadowColor: Colors.black.withOpacity(0.5),
+                          elevation: 10,
+                        ),
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 10),
+                          child: Text(
+                            'Quitar foto',
+                            style: TextStyle(fontSize: 18, color: Colors.white),
+                          ),
+                        ),
+                      ),
                   ],
                 ),
               ),
@@ -221,35 +270,34 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 255, 123, 0).withOpacity(0.9),
+        color: Colors.white.withOpacity(0.9),
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.2),
+            color: Colors.white.withOpacity(0.2),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
         ],
       ),
-      margin: const EdgeInsets.symmetric(vertical: 5),
       child: TextFormField(
         controller: controller,
         keyboardType: isNumber ? TextInputType.number : TextInputType.text,
+        maxLength: maxLength,
         readOnly: readOnly,
-        inputFormatters: isNumber
-            ? <TextInputFormatter>[
-                FilteringTextInputFormatter.digitsOnly,
-                LengthLimitingTextInputFormatter(maxLength),
-              ]
-            : null,
         decoration: InputDecoration(
           labelText: label,
           labelStyle: const TextStyle(color: Colors.white),
-          border: InputBorder.none,
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+          border: const OutlineInputBorder(),
+          filled: true,
+          fillColor: const Color.fromARGB(255, 255, 123, 0).withOpacity(0.9),
+
+          focusedBorder: const OutlineInputBorder(
+            borderSide:
+                BorderSide(color: Color.fromARGB(255, 255, 102, 0), width: 2),
+          ),
+          counterText: '', // Oculta el contador de caracteres
         ),
-        style: const TextStyle(color: Colors.white),
         validator: (value) {
           if (value == null || value.isEmpty) {
             return 'Este campo es obligatorio';
@@ -275,37 +323,36 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
           ),
         ],
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      margin: const EdgeInsets.symmetric(vertical: 5),
       child: DropdownButtonFormField<String>(
         value: _sexo,
-        isExpanded: true,
-        dropdownColor: const Color.fromARGB(255, 18, 40, 51),
+        onChanged: readOnly
+            ? null
+            : (newValue) {
+                setState(() {
+                  _sexo = newValue!;
+                });
+              },
         decoration: InputDecoration(
           labelText: label,
           labelStyle: const TextStyle(color: Colors.white),
-          border: InputBorder.none,
+          border: const OutlineInputBorder(),
+          filled: true,
+          fillColor: const Color.fromARGB(255, 255, 123, 0).withOpacity(0.9),
+          enabledBorder: const OutlineInputBorder(
+            borderSide:
+                BorderSide(color: Color.fromARGB(255, 255, 102, 0), width: 2),
+          ),
+          focusedBorder: const OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.blue, width: 2),
+          ),
         ),
-        items: opciones
-            .map((opcion) => DropdownMenuItem(
-                  value: opcion,
-                  child:
-                      Text(opcion, style: const TextStyle(color: Colors.white)),
-                ))
-            .toList(),
-        onChanged: readOnly
-            ? null
-            : (value) {
-                setState(() {
-                  _sexo = value!;
-                });
-              },
-        validator: (value) {
-          if (value == null) {
-            return 'Este campo es obligatorio';
-          }
-          return null;
-        },
+        items: opciones.map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value,
+                style: const TextStyle(color: Color.fromARGB(255, 0, 0, 0))),
+          );
+        }).toList(),
       ),
     );
   }
@@ -314,18 +361,22 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
     try {
       final user = FirebaseAuth.instance.currentUser;
       if (user != null) {
-        await FirebaseFirestore.instance.collection('01').doc(user.uid).set({
-          'nombre': _nombreController.text,
-          'edad': int.tryParse(_edadController.text),
-          'peso': int.tryParse(_pesoController.text),
-          'estatura': int.tryParse(_estaturaController.text),
-          'sexo': _sexo,
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Perfil guardado')),
+        await FirebaseFirestore.instance.collection('01').doc(user.uid).set(
+          {
+            'nombre': _nombreController.text,
+            'edad': int.tryParse(_edadController.text),
+            'peso': int.tryParse(_pesoController.text),
+            'estatura': int.tryParse(_estaturaController.text),
+            'sexo': _sexo,
+            'imageUrl': _imageFile != null
+                ? _imageFile!.path
+                : null, // Guardar la ruta de la imagen
+          },
+          SetOptions(merge: true), // Combina datos sin eliminar otros campos
         );
-
-        // Navega a la Pantalla Principal
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Perfil guardado con éxito')),
+        );
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(

@@ -22,6 +22,16 @@ class PlanFlexibilidad extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false, // Quita la flecha de regreso
+        title: const Center(
+          child: Text(
+            'Plan - Flexibilidad',
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
+        backgroundColor: Colors.black,
+      ),
       body: SafeArea(
         child: Container(
           width: double.infinity,
@@ -42,16 +52,7 @@ class PlanFlexibilidad extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  'Plan - Flexibilidad',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 0),
                 ActivityItem(
                   imageUrl: 'assets/yoga.jpg',
                   buttonText: 'Yoga',

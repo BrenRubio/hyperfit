@@ -8,6 +8,16 @@ class ObjetivoScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false, // Quita la flecha de regreso
+        title: const Center(
+          child: Text(
+            'Objetivos',
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
+        backgroundColor: Colors.black,
+      ),
       body: SafeArea(
         child: Container(
           width: double.infinity,
@@ -28,15 +38,7 @@ class ObjetivoScreen extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text(
-                  'Objetivos',
-                  style: TextStyle(
-                    fontSize: 24,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 0),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [

@@ -3,7 +3,6 @@ import 'package:flutter_hyperfit/paginas/fuerza/bandas.dart';
 import 'package:flutter_hyperfit/paginas/fuerza/kettlebells.dart';
 import 'package:flutter_hyperfit/paginas/fuerza/levantamiento.dart';
 import 'package:flutter_hyperfit/paginas/fuerza/prensa.dart';
-import 'package:flutter_hyperfit/paginas/peso_act/general.dart';
 
 void main() {
   runApp(MyApp());

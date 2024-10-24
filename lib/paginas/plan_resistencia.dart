@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hyperfit/paginas/peso_act/general.dart';
 import 'package:flutter_hyperfit/paginas/resistencia_act/circuito.dart';
 import 'package:flutter_hyperfit/paginas/resistencia_act/cuerda.dart';
 import 'package:flutter_hyperfit/paginas/resistencia_act/escalera.dart';

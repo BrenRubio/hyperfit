@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hyperfit/paginas/peso_act/general.dart';
+import 'package:flutter_hyperfit/paginas/resistencia_act/circuito.dart';
+import 'package:flutter_hyperfit/paginas/resistencia_act/cuerda.dart';
+import 'package:flutter_hyperfit/paginas/resistencia_act/escalera.dart';
+import 'package:flutter_hyperfit/paginas/resistencia_act/senderismo.dart';
 
 void main() {
   runApp(MyApp());
@@ -56,7 +60,7 @@ class PlanResistencia extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => DetalleActividad1()),
+                          builder: (context) => ActividadesCircuito()),
                     );
                   },
                 ),
@@ -68,7 +72,7 @@ class PlanResistencia extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => DetalleActividad1()),
+                          builder: (context) => ActividadesEscalera()),
                     );
                   },
                 ),
@@ -80,7 +84,7 @@ class PlanResistencia extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => DetalleActividad1()),
+                          builder: (context) => ActividadesSenderismo()),
                     );
                   },
                 ),
@@ -92,7 +96,7 @@ class PlanResistencia extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => DetalleActividad1()),
+                          builder: (context) => ActividadesCuerda()),
                     );
                   },
                 ),

@@ -80,10 +80,10 @@ class ActividadesCiclismo extends StatelessWidget {
   Widget _buildCard(BuildContext context, Actividad actividad) {
     return Container(
       margin: const EdgeInsets.all(
-          8), // Reducir margen para hacer la tarjeta más pequeña
+          15), // Reducir margen para hacer la tarjeta más pequeña
       decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 255, 123, 0).withOpacity(0.9),
-        borderRadius: BorderRadius.circular(10),
+        color: Color.fromARGB(255, 255, 123, 0).withOpacity(0.9),
+        borderRadius: BorderRadius.circular(15),
         boxShadow: const [
           BoxShadow(
             color: Colors.black54,
@@ -94,19 +94,19 @@ class ActividadesCiclismo extends StatelessWidget {
       ),
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(
-            vertical: 12, horizontal: 16), // Ajustar padding
+            vertical: 1, horizontal: 26), // Ajustar padding
         title: Text(
           actividad.nombre,
           style: const TextStyle(
             fontSize: 20, // Tamaño de fuente más pequeño
             fontWeight: FontWeight.bold,
-            color: Color.fromARGB(255, 20, 0, 133),
+            color: Color.fromARGB(255, 8, 80, 212),
           ),
         ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 4),
+            const SizedBox(height: 1),
             Text(
               actividad.descripcion,
               style: const TextStyle(
@@ -115,7 +115,7 @@ class ActividadesCiclismo extends StatelessWidget {
                 color: Colors.white70,
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 1),
             _buildInfoRow('Intensidad:', actividad.intensidad),
             _buildInfoRow('Calorías:', '${actividad.calorias} kcal'),
             _buildInfoRow('Duración:', '${actividad.duracion} min'),
@@ -128,7 +128,7 @@ class ActividadesCiclismo extends StatelessWidget {
 
   Widget _buildInfoRow(String title, String value) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2),
+      padding: const EdgeInsets.symmetric(vertical: 1),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

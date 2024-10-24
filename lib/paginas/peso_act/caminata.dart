@@ -80,10 +80,10 @@ class ActividadesCaminata extends StatelessWidget {
   Widget _buildCard(BuildContext context, Actividad actividad) {
     return Container(
       margin: const EdgeInsets.all(
-          8), // Reducir margen para hacer la tarjeta más pequeña
+          15), // Reducir margen para hacer la tarjeta más pequeña
       decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 255, 123, 0).withOpacity(0.9),
-        borderRadius: BorderRadius.circular(10),
+        color: Color.fromARGB(255, 255, 123, 0).withOpacity(0.9),
+        borderRadius: BorderRadius.circular(15),
         boxShadow: const [
           BoxShadow(
             color: Colors.black54,
@@ -94,19 +94,19 @@ class ActividadesCaminata extends StatelessWidget {
       ),
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(
-            vertical: 12, horizontal: 16), // Ajustar padding
+            vertical: 1, horizontal: 26), // Ajustar padding
         title: Text(
           actividad.nombre,
           style: const TextStyle(
             fontSize: 20, // Tamaño de fuente más pequeño
             fontWeight: FontWeight.bold,
-            color: Color.fromARGB(255, 20, 0, 133),
+            color: Color.fromARGB(255, 8, 80, 212),
           ),
         ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 4),
+            const SizedBox(height: 1),
             Text(
               actividad.descripcion,
               style: const TextStyle(
@@ -115,7 +115,7 @@ class ActividadesCaminata extends StatelessWidget {
                 color: Colors.white70,
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 1),
             _buildInfoRow('Intensidad:', actividad.intensidad),
             _buildInfoRow('Calorías:', '${actividad.calorias} kcal'),
             _buildInfoRow('Duración:', '${actividad.duracion} min'),
@@ -128,7 +128,7 @@ class ActividadesCaminata extends StatelessWidget {
 
   Widget _buildInfoRow(String title, String value) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2),
+      padding: const EdgeInsets.symmetric(vertical: 1),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -198,6 +198,7 @@ class _TemporizadorScreenState extends State<TemporizadorScreen> {
   int segundosRestantes = 0;
   late Timer _timer;
   double progreso = 1.0;
+  bool _estaPausado = false;
 
   @override
   void initState() {
@@ -208,16 +209,61 @@ class _TemporizadorScreenState extends State<TemporizadorScreen> {
 
   void _iniciarTemporizador() {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (segundosRestantes > 0) {
+      if (!_estaPausado && segundosRestantes > 0) {
         setState(() {
           segundosRestantes--;
           progreso = segundosRestantes / (widget.actividad.duracion * 60);
         });
-      } else {
+      } else if (segundosRestantes == 0) {
         _timer.cancel();
         _mostrarActividadCompletada();
       }
     });
+  }
+
+  void _pausarTemporizador() {
+    setState(() {
+      _estaPausado = true;
+    });
+  }
+
+  void _reanudarTemporizador() {
+    setState(() {
+      _estaPausado = false;
+    });
+  }
+
+  void _reiniciarTemporizador() {
+    setState(() {
+      segundosRestantes = widget.actividad.duracion * 60;
+      progreso = 1.0;
+      _estaPausado = false;
+    });
+  }
+
+  Future<bool> _onWillPop() async {
+    return (await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('¿Salir del temporizador?'),
+            content: const Text('Si sales, se perderá el progreso.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(true);
+                },
+                child: const Text('Salir'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(false);
+                },
+                child: const Text('Cancelar'),
+              ),
+            ],
+          ),
+        )) ??
+        false;
   }
 
   void _mostrarActividadCompletada() {
@@ -250,52 +296,68 @@ class _TemporizadorScreenState extends State<TemporizadorScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Temporizador: ${widget.actividad.nombre}',
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('Temporizador: ${widget.actividad.nombre}'),
+          backgroundColor: const Color.fromARGB(255, 0, 0, 0),
         ),
-        backgroundColor: const Color.fromARGB(255, 0, 0, 0), // Azul vibrante
-      ),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Colors.black,
-              Color.fromARGB(255, 18, 40, 51),
-              Colors.black,
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
+        body: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Colors.black,
+                Color.fromARGB(255, 18, 40, 51),
+                Colors.black,
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
           ),
-        ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Tiempo restante: ${_formatearTiempo(segundosRestantes)}',
-                style: const TextStyle(
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Tiempo restante: ${_formatearTiempo(segundosRestantes)}',
+                  style: const TextStyle(
                     fontSize: 28,
-                    color:
-                        Color.fromARGB(255, 255, 123, 0)), // Color anaranjado
-              ),
-              const SizedBox(height: 20),
-              CircularProgressIndicator(
-                value: progreso, // Valor entre 0 y 1
-                strokeWidth: 8,
-                backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-                valueColor: const AlwaysStoppedAnimation<Color>(Colors.green),
-              ),
-              const SizedBox(height: 20),
-              Text(
-                'Duración total: ${widget.actividad.duracion} minutos',
-                style: const TextStyle(
-                    fontSize: 20,
-                    color:
-                        Color.fromARGB(255, 255, 123, 0)), // Color anaranjado
-              ),
-            ],
+                    color: Color.fromARGB(255, 255, 123, 0),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                CircularProgressIndicator(
+                  value: progreso,
+                  backgroundColor: Colors.grey,
+                  valueColor: const AlwaysStoppedAnimation<Color>(
+                      Color.fromARGB(255, 255, 123, 0)),
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton.icon(
+                      onPressed: _pausarTemporizador,
+                      icon: const Icon(Icons.pause),
+                      label: const Text('Pausar'),
+                    ),
+                    const SizedBox(width: 10),
+                    ElevatedButton.icon(
+                      onPressed: _reanudarTemporizador,
+                      icon: const Icon(Icons.play_arrow),
+                      label: const Text('Reanudar'),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton.icon(
+                  onPressed: _reiniciarTemporizador,
+                  icon: const Icon(Icons.repeat),
+                  label: const Text('Reiniciar'),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -303,8 +365,8 @@ class _TemporizadorScreenState extends State<TemporizadorScreen> {
   }
 
   String _formatearTiempo(int segundos) {
-    int minutos = segundos ~/ 60;
-    int segundosRestantes = segundos % 60;
+    final minutos = (segundos ~/ 60) % 60;
+    final segundosRestantes = segundos % 60;
     return '${minutos.toString().padLeft(2, '0')}:${segundosRestantes.toString().padLeft(2, '0')}';
   }
 }

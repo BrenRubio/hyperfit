@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: ActividadesNatacion(),
+      home: ActividadesBandas(),
     );
   }
 }
@@ -25,13 +25,13 @@ class Actividad {
   String descripcion;
   int duracion; // en minutos
   String intensidad;
-  int calorias; // calorías quemadas
+  int carga; // calorías quemadas
 
   Actividad(this.nombre, this.descripcion, this.duracion, this.intensidad,
-      this.calorias);
+      this.carga);
 }
 
-class ActividadesNatacion extends StatelessWidget {
+class ActividadesBandas extends StatelessWidget {
   final List<Actividad> actividades = [
     Actividad("Actividad1", "Descripción", 1, "Baja", 300),
     Actividad("Actividad2", "Descripción", 45, "Media", 250),
@@ -39,7 +39,7 @@ class ActividadesNatacion extends StatelessWidget {
     Actividad("Actividad4", "Descripción", 60, "Media", 400),
   ];
 
-  ActividadesNatacion({super.key});
+  ActividadesBandas({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -117,7 +117,7 @@ class ActividadesNatacion extends StatelessWidget {
             ),
             const SizedBox(height: 1),
             _buildInfoRow('Intensidad:', actividad.intensidad),
-            _buildInfoRow('Calorías:', '${actividad.calorias} kcal'),
+            _buildInfoRow('Carga:', '${actividad.carga} kcal'),
             _buildInfoRow('Duración:', '${actividad.duracion} min'),
           ],
         ),

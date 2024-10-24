@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hyperfit/paginas/fuerza/bandas.dart';
+import 'package:flutter_hyperfit/paginas/fuerza/kettlebells.dart';
+import 'package:flutter_hyperfit/paginas/fuerza/levantamiento.dart';
+import 'package:flutter_hyperfit/paginas/fuerza/prensa.dart';
 import 'package:flutter_hyperfit/paginas/peso_act/general.dart';
 
 void main() {
@@ -56,7 +60,7 @@ class PlanFuerza extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => DetalleActividad1()),
+                          builder: (context) => ActividadesLevantamiento()),
                     );
                   },
                 ),
@@ -68,7 +72,7 @@ class PlanFuerza extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => DetalleActividad1()),
+                          builder: (context) => ActividadesBandas()),
                     );
                   },
                 ),
@@ -80,7 +84,7 @@ class PlanFuerza extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => DetalleActividad1()),
+                          builder: (context) => ActividadesKettlebells()),
                     );
                   },
                 ),
@@ -92,7 +96,7 @@ class PlanFuerza extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => DetalleActividad1()),
+                          builder: (context) => ActividadesPrensa()),
                     );
                   },
                 ),

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hyperfit/paginas/peso_act/general.dart';
+import 'package:flutter_hyperfit/paginas/flexibilidad/dinamicos.dart';
+import 'package:flutter_hyperfit/paginas/flexibilidad/estaticos.dart';
+import 'package:flutter_hyperfit/paginas/flexibilidad/pilates.dart';
+import 'package:flutter_hyperfit/paginas/flexibilidad/yoga.dart';
 
 void main() {
   runApp(MyApp());
@@ -56,7 +59,7 @@ class PlanFlexibilidad extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => DetalleActividad1()),
+                          builder: (context) => ActividadesYoga()),
                     );
                   },
                 ),
@@ -68,7 +71,7 @@ class PlanFlexibilidad extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => DetalleActividad1()),
+                          builder: (context) => ActividadesPilates()),
                     );
                   },
                 ),
@@ -80,7 +83,7 @@ class PlanFlexibilidad extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => DetalleActividad1()),
+                          builder: (context) => ActividadesEstaticos()),
                     );
                   },
                 ),
@@ -92,7 +95,7 @@ class PlanFlexibilidad extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => DetalleActividad1()),
+                          builder: (context) => ActividadesDinamicas()),
                     );
                   },
                 ),

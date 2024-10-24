@@ -58,7 +58,7 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
               false, // Evita que se muestre la flecha de retroceso
           title: Center(
             child: const Text(
-              'Pantalla Principal',
+              '     Pantalla principal',
               style: TextStyle(color: Colors.white), // Color del texto
             ),
           ),
@@ -114,6 +114,7 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
               end: Alignment.bottomCenter,
               colors: [
                 Colors.black,
+                Colors.black,
                 Color.fromARGB(255, 18, 40, 51),
                 Colors.black,
               ],
@@ -147,10 +148,17 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
                         ObjetivoScreen(), // Navega a ObjetivoScreen
                   ),
                 );
-              } else {
-                _currentIndex =
-                    index; // Actualiza el índice de la pestaña seleccionada
+              } else if (index == 2) {
+                // Agregamos la condición para "Progreso"
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        ObjetivoScreen(), // Cambia 'ProgresoScreen' por tu pantalla de progreso
+                  ),
+                );
               }
+              // En caso de que no se seleccione ningún índice, no es necesario actualizar _currentIndex aquí
             });
           },
           items: const [
@@ -167,7 +175,7 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
               label: 'Progreso',
             ),
           ],
-          selectedItemColor: Colors.black,
+          selectedItemColor: Colors.white,
           unselectedItemColor: Colors.white,
           backgroundColor: Color.fromARGB(255, 255, 123, 0),
         ),
@@ -195,10 +203,11 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
           _buildCard('Índice de Masa Corporal: ${imc.toStringAsFixed(2)}',
               Icons.calculate),
           const SizedBox(height: 20), // Separación entre tarjetas
-          _buildCard(
-              'MB: ${mb.toStringAsFixed(2)} kcal', Icons.local_fire_department),
+          _buildCard('Metabolismo Basal: ${mb.toStringAsFixed(2)} kcal',
+              Icons.local_fire_department),
           const SizedBox(height: 20), // Separación entre tarjetas
-          _buildCard('Grasa Corporal: ${porcentajeGrasa.toStringAsFixed(2)} %',
+          _buildCard(
+              'Porcentaje de Grasa Corporal: ${porcentajeGrasa.toStringAsFixed(2)} %',
               Icons.fitness_center),
         ],
       ),

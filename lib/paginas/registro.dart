@@ -230,9 +230,9 @@ class _RegistroState extends State<Registro> {
                         shadowColor: Colors.black.withOpacity(0.5),
                         elevation: 10,
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 30, vertical: 10),
+                      child: const Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 30, vertical: 10),
                         child: Text(
                           'Registrarse',
                           style: TextStyle(fontSize: 18, color: Colors.white),
@@ -247,12 +247,12 @@ class _RegistroState extends State<Registro> {
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
-                                  inicio_sesion()), // Navegar a Registro
+                                  const inicio_sesion()), // Navegar a Registro
                         );
                       },
                       style:
                           TextButton.styleFrom(foregroundColor: Colors.white),
-                      child: Text('Cancelar'),
+                      child: const Text('Cancelar'),
                     ),
                   ],
                 ),

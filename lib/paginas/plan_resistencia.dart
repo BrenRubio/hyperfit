@@ -9,6 +9,8 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -19,6 +21,8 @@ class MyApp extends StatelessWidget {
 }
 
 class PlanResistencia extends StatelessWidget {
+  const PlanResistencia({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -114,7 +118,8 @@ class ActivityItem extends StatelessWidget {
   final String buttonText;
   final VoidCallback onTap;
 
-  ActivityItem({
+  const ActivityItem({
+    super.key,
     required this.imageUrl,
     required this.buttonText,
     required this.onTap,

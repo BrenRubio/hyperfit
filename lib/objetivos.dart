@@ -5,6 +5,8 @@ import 'package:flutter_hyperfit/paginas/plan_peso.dart';
 import 'package:flutter_hyperfit/paginas/plan_resistencia.dart';
 
 class ObjetivoScreen extends StatelessWidget {
+  const ObjetivoScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

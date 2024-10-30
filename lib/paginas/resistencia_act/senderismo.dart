@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -82,7 +82,7 @@ class ActividadesSenderismo extends StatelessWidget {
       margin: const EdgeInsets.all(
           15), // Reducir margen para hacer la tarjeta más pequeña
       decoration: BoxDecoration(
-        color: Color.fromARGB(255, 255, 123, 0).withOpacity(0.9),
+        color: const Color.fromARGB(255, 255, 123, 0).withOpacity(0.9),
         borderRadius: BorderRadius.circular(15),
         boxShadow: const [
           BoxShadow(

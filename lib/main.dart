@@ -34,8 +34,8 @@ class _loadingState extends State<loading> {
   void initState() {
     Future.delayed(
       const Duration(milliseconds: 2000),
-      () => Navigator.push(
-          context, MaterialPageRoute(builder: (context) => InicioSesion())),
+      () => Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const InicioSesion())),
     );
     super.initState();
   }

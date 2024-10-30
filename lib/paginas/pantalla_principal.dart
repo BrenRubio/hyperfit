@@ -16,7 +16,7 @@ class PantallaPrincipal extends StatefulWidget {
 }
 
 class _PantallaPrincipalState extends State<PantallaPrincipal> {
-  int _currentIndex =
+  final int _currentIndex =
       0; // Variable para controlar el índice de la pestaña seleccionada
   Map<String, dynamic>?
       userData; // Variable para almacenar los datos del usuario
@@ -41,11 +41,11 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
   }
 
   final List<Widget> _pages = [
-    Center(
+    const Center(
         child:
             CircularProgressIndicator()), // Temporariamente muestra un cargador
-    Center(child: Text('Plan')),
-    Center(child: Text('Progreso')),
+    const Center(child: Text('Plan')),
+    const Center(child: Text('Progreso')),
   ];
 
   @override
@@ -56,8 +56,8 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
         appBar: AppBar(
           automaticallyImplyLeading:
               false, // Evita que se muestre la flecha de retroceso
-          title: Center(
-            child: const Text(
+          title: const Center(
+            child: Text(
               '     Pantalla principal',
               style: TextStyle(color: Colors.white), // Color del texto
             ),
@@ -135,7 +135,7 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => PerfilUsuario(
+                    builder: (context) => const PerfilUsuario(
                       nombre: 'Perfil',
                     ), // Navega a PerfilUsuario
                   ),
@@ -177,7 +177,7 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
           ],
           selectedItemColor: Colors.white,
           unselectedItemColor: Colors.white,
-          backgroundColor: Color.fromARGB(255, 255, 123, 0),
+          backgroundColor: const Color.fromARGB(255, 255, 123, 0),
         ),
       );
     } else {
@@ -258,7 +258,8 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start, // Ícono a la izquierda
             children: [
-              Icon(icon, size: 50, color: Color.fromARGB(255, 255, 123, 0)),
+              Icon(icon,
+                  size: 50, color: const Color.fromARGB(255, 255, 123, 0)),
               const SizedBox(width: 20), // Espacio entre el ícono y el texto
               Expanded(
                 child: Text(

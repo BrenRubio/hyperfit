@@ -104,8 +104,8 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
   }
 
   Future<void> _pickImage() async {
-    final ImagePicker _picker = ImagePicker();
-    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    final ImagePicker picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
         _imageFile = File(pickedFile.path);
@@ -217,7 +217,7 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
                         });
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color.fromARGB(255, 236, 193, 0),
+                        backgroundColor: const Color.fromARGB(255, 236, 193, 0),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15),
                         ),
@@ -368,9 +368,7 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
             'peso': int.tryParse(_pesoController.text),
             'estatura': int.tryParse(_estaturaController.text),
             'sexo': _sexo,
-            'imageUrl': _imageFile != null
-                ? _imageFile!.path
-                : null, // Guardar la ruta de la imagen
+            'imageUrl': _imageFile?.path, // Guardar la ruta de la imagen
           },
           SetOptions(merge: true), // Combina datos sin eliminar otros campos
         );

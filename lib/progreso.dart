@@ -8,13 +8,16 @@ class Progreso extends StatefulWidget {
 }
 
 class _ProgresoState extends State<Progreso> {
-  int totalCalorias = 0; // Cambiado a int
+  int totalCalorias = 0; // Total de calorías
+  int totalTiempo = 0; // Total de tiempo en minutos
+  int totalAgilidad = 0; // Total de agilidad (flexibilidad)
+  int totalCarga = 0; // Total de carga soportada
 
   // Lista editable de textos para cada caja
   final List<String> textos = [
     'Peso perdido',
     'Resistencia',
-    'Agilidad',
+    'Flexibilidad',
     'Carga soportada',
   ];
 
@@ -32,17 +35,16 @@ class _ProgresoState extends State<Progreso> {
   void initState() {
     super.initState();
     obtenerCaloriasTotal();
+    obtenerResistenciaTotal();
+    obtenerFlexibilidadTotal(); // Nueva función para obtener flexibilidad
+    obtenerCargaTotal(); // Nueva función para obtener carga soportada
   }
 
   Future<void> obtenerCaloriasTotal() async {
-    // Verifica que el usuario esté autenticado
-    if (user == null) {
-      return; // Retorna si el usuario no está autenticado
-    }
+    if (user == null) return; // Retorna si el usuario no está autenticado
 
-    int totalCaloriasTemp = 0; // Cambiado a int
+    int totalCaloriasTemp = 0;
 
-    // Accede a la colección de Firestore usando el uid del usuario
     QuerySnapshot snapshot = await FirebaseFirestore.instance
         .collection('01')
         .doc(user!.uid)
@@ -53,17 +55,92 @@ class _ProgresoState extends State<Progreso> {
       final data = doc.data() as Map<String, dynamic>?;
 
       if (data != null && data['calorias'] != null) {
-        // Verifica que el campo calorias sea de tipo num
         if (data['calorias'] is num) {
-          // Convierte a int antes de sumar
-          totalCaloriasTemp += (data['calorias'] as num)
-              .toInt(); // Asegúrate de usar toInt() aquí
+          totalCaloriasTemp += (data['calorias'] as num).toInt();
         }
       }
     }
 
     setState(() {
       totalCalorias = totalCaloriasTemp;
+    });
+  }
+
+  Future<void> obtenerResistenciaTotal() async {
+    if (user == null) return; // Retorna si el usuario no está autenticado
+
+    int totalTiempoTemp = 0;
+
+    QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection('01')
+        .doc(user!.uid)
+        .collection('actividades_completadas')
+        .get();
+
+    for (var doc in snapshot.docs) {
+      final data = doc.data() as Map<String, dynamic>?;
+
+      if (data != null && data['tiempo'] != null) {
+        if (data['tiempo'] is num) {
+          totalTiempoTemp += (data['tiempo'] as num).toInt();
+        }
+      }
+    }
+
+    setState(() {
+      totalTiempo = totalTiempoTemp;
+    });
+  }
+
+  Future<void> obtenerFlexibilidadTotal() async {
+    if (user == null) return; // Retorna si el usuario no está autenticado
+
+    int totalAgilidadTemp = 0;
+
+    QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection('01')
+        .doc(user!.uid)
+        .collection('actividades_completadas')
+        .get();
+
+    for (var doc in snapshot.docs) {
+      final data = doc.data() as Map<String, dynamic>?;
+
+      if (data != null && data['agilidad'] != null) {
+        if (data['agilidad'] is num) {
+          totalAgilidadTemp += (data['agilidad'] as num).toInt();
+        }
+      }
+    }
+
+    setState(() {
+      totalAgilidad = totalAgilidadTemp;
+    });
+  }
+
+  Future<void> obtenerCargaTotal() async {
+    if (user == null) return; // Retorna si el usuario no está autenticado
+
+    int totalCargaTemp = 0;
+
+    QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection('01')
+        .doc(user!.uid)
+        .collection('actividades_completadas')
+        .get();
+
+    for (var doc in snapshot.docs) {
+      final data = doc.data() as Map<String, dynamic>?;
+
+      if (data != null && data['carga'] != null) {
+        if (data['carga'] is num) {
+          totalCargaTemp += (data['carga'] as num).toInt();
+        }
+      }
+    }
+
+    setState(() {
+      totalCarga = totalCargaTemp;
     });
   }
 
@@ -162,7 +239,13 @@ class _ProgresoState extends State<Progreso> {
                               const SizedBox(width: 8),
                               Expanded(
                                 child: Text(
-                                  index == 0 ? '$totalCalorias' : textos[index],
+                                  index == 0
+                                      ? 'Peso perdido: $totalCalorias kcal'
+                                      : index == 1
+                                          ? 'Resistencia: $totalTiempo min'
+                                          : index == 2
+                                              ? 'Flexibilidad: $totalAgilidad mm'
+                                              : 'Carga soportada: $totalCarga kcal',
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 18,

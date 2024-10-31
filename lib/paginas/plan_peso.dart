@@ -5,7 +5,7 @@ import 'package:flutter_hyperfit/paginas/peso_act/ciclismo.dart';
 import 'package:flutter_hyperfit/paginas/peso_act/natacion.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       title: 'Plan - Resistencia',
       home: PlanPeso(),
     );

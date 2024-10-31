@@ -145,7 +145,7 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
                   context,
                   MaterialPageRoute(
                     builder: (context) =>
-                        ObjetivoScreen(), // Navega a ObjetivoScreen
+                        const ObjetivoScreen(), // Navega a ObjetivoScreen
                   ),
                 );
               } else if (index == 2) {
@@ -154,7 +154,7 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
                   context,
                   MaterialPageRoute(
                     builder: (context) =>
-                        ObjetivoScreen(), // Cambia 'ProgresoScreen' por tu pantalla de progreso
+                        const ObjetivoScreen(), // Cambia 'ProgresoScreen' por tu pantalla de progreso
                   ),
                 );
               }

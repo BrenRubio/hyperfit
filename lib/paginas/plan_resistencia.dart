@@ -5,7 +5,7 @@ import 'package:flutter_hyperfit/paginas/resistencia_act/escalera.dart';
 import 'package:flutter_hyperfit/paginas/resistencia_act/senderismo.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       title: 'Plan - Resistencia',
       home: PlanResistencia(),
     );

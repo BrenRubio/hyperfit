@@ -49,7 +49,7 @@ class ObjetivoScreen extends StatelessWidget {
                         'Perder peso',
                         'assets/peso.jpg',
                         context,
-                        PlanPeso(), // Pantalla a la que se dirige
+                        const PlanPeso(), // Pantalla a la que se dirige
                       ),
                     ),
                     const SizedBox(width: 16),
@@ -58,7 +58,7 @@ class ObjetivoScreen extends StatelessWidget {
                         'Resistencia',
                         'assets/resistencia.jpg',
                         context,
-                        PlanResistencia(), // Pantalla a la que se dirige
+                        const PlanResistencia(), // Pantalla a la que se dirige
                       ),
                     ),
                   ],
@@ -72,7 +72,7 @@ class ObjetivoScreen extends StatelessWidget {
                         'Flexibilidad',
                         'assets/flexibilidad.jpg',
                         context,
-                        PlanFlexibilidad(), // Pantalla a la que se dirige
+                        const PlanFlexibilidad(), // Pantalla a la que se dirige
                       ),
                     ),
                     const SizedBox(width: 16),
@@ -81,7 +81,7 @@ class ObjetivoScreen extends StatelessWidget {
                         'Fuerza',
                         'assets/fuerza.jpg',
                         context,
-                        PlanFuerza(), // Pantalla a la que se dirige
+                        const PlanFuerza(), // Pantalla a la que se dirige
                       ),
                     ),
                   ],

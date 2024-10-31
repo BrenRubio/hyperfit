@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_hyperfit/objetivos.dart';
 import 'package:flutter_hyperfit/paginas/inicio_sesion.dart';
 import 'package:flutter_hyperfit/paginas/perfil_usuario.dart';
+import 'package:flutter_hyperfit/progreso.dart';
 
 class PantallaPrincipal extends StatefulWidget {
   final String nombre; // Variable para almacenar el nombre
@@ -145,7 +146,7 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
                   context,
                   MaterialPageRoute(
                     builder: (context) =>
-                        const ObjetivoScreen(), // Navega a ObjetivoScreen
+                        ObjetivoScreen(), // Navega a ObjetivoScreen
                   ),
                 );
               } else if (index == 2) {
@@ -154,7 +155,7 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
                   context,
                   MaterialPageRoute(
                     builder: (context) =>
-                        const ObjetivoScreen(), // Cambia 'ProgresoScreen' por tu pantalla de progreso
+                        Progreso(), // Cambia 'ProgresoScreen' por tu pantalla de progreso
                   ),
                 );
               }

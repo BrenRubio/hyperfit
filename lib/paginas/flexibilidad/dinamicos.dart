@@ -35,7 +35,7 @@ class Actividad {
 
 class ActividadesDinamicas extends StatelessWidget {
   final List<Actividad> actividades = [
-    Actividad("Actividad1DINAMICOS", "Descripción", 1, "Baja", 300),
+    Actividad("Actividad1", "Descripción", 1, "Baja", 300),
     Actividad("Actividad2", "Descripción", 45, "Media", 250),
     Actividad("Actividad3", "Descripción", 30, "Alta", 350),
     Actividad("Actividad4", "Descripción", 60, "Media", 400),

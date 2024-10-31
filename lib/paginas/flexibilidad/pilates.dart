@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:async';
 
 void main() {
@@ -25,7 +27,7 @@ class Actividad {
   String descripcion;
   int duracion; // en minutos
   String intensidad;
-  int agilidad;
+  int agilidad; // mm de elasticidad
 
   Actividad(this.nombre, this.descripcion, this.duracion, this.intensidad,
       this.agilidad);
@@ -48,11 +50,10 @@ class ActividadesPilates extends StatelessWidget {
         title: const Center(
           child: Text(
             'Actividades',
-            style: TextStyle(
-                color: Colors.white), // Cambia el color del texto aquí
+            style: TextStyle(color: Colors.white),
           ),
         ),
-        backgroundColor: Colors.black, // Azul vibrante
+        backgroundColor: Colors.black,
       ),
       body: Container(
         decoration: const BoxDecoration(
@@ -79,26 +80,24 @@ class ActividadesPilates extends StatelessWidget {
 
   Widget _buildCard(BuildContext context, Actividad actividad) {
     return Container(
-      margin: const EdgeInsets.all(
-          15), // Reducir margen para hacer la tarjeta más pequeña
+      margin: const EdgeInsets.all(15),
       decoration: BoxDecoration(
         color: const Color.fromARGB(255, 255, 123, 0).withOpacity(0.9),
         borderRadius: BorderRadius.circular(15),
         boxShadow: const [
           BoxShadow(
             color: Colors.black54,
-            offset: Offset(0, 2), // Menos sombra para un diseño más compacto
+            offset: Offset(0, 2),
             blurRadius: 10,
           ),
         ],
       ),
       child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(
-            vertical: 1, horizontal: 26), // Ajustar padding
+        contentPadding: const EdgeInsets.symmetric(vertical: 1, horizontal: 26),
         title: Text(
           actividad.nombre,
           style: const TextStyle(
-            fontSize: 20, // Tamaño de fuente más pequeño
+            fontSize: 20,
             fontWeight: FontWeight.bold,
             color: Color.fromARGB(255, 8, 80, 212),
           ),
@@ -110,7 +109,7 @@ class ActividadesPilates extends StatelessWidget {
             Text(
               actividad.descripcion,
               style: const TextStyle(
-                fontSize: 14, // Tamaño de fuente más pequeño
+                fontSize: 14,
                 fontStyle: FontStyle.italic,
                 color: Colors.white70,
               ),
@@ -135,14 +134,14 @@ class ActividadesPilates extends StatelessWidget {
           Text(
             title,
             style: const TextStyle(
-              fontSize: 14, // Tamaño de fuente más pequeño
+              fontSize: 14,
               color: Colors.white,
             ),
           ),
           Text(
             value,
             style: const TextStyle(
-              fontSize: 14, // Tamaño de fuente más pequeño
+              fontSize: 14,
               color: Color.fromARGB(255, 0, 17, 65),
               fontWeight: FontWeight.bold,
             ),
@@ -216,7 +215,7 @@ class _TemporizadorScreenState extends State<TemporizadorScreen> {
         });
       } else if (segundosRestantes == 0) {
         _timer.cancel();
-        _mostrarActividadCompletada();
+        _registrarActividadCompletada();
       }
     });
   }
@@ -242,28 +241,52 @@ class _TemporizadorScreenState extends State<TemporizadorScreen> {
   }
 
   Future<bool> _onWillPop() async {
-    return (await showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('¿Salir del temporizador?'),
-            content: const Text('Si sales, se perderá el progreso.'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop(true);
-                },
-                child: const Text('Salir'),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop(false);
-                },
-                child: const Text('Cancelar'),
-              ),
-            ],
-          ),
-        )) ??
-        false;
+    bool? cancelar = await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Cancelar Actividad'),
+          content:
+              const Text('¿Estás seguro de que deseas cancelar la actividad?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false); // No cancelar
+              },
+              child: const Text('No'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(true); // Cancelar
+              },
+              child: const Text('Sí'),
+            ),
+          ],
+        );
+      },
+    );
+    return cancelar ?? false; // Devuelve false si el usuario no responde
+  }
+
+  void _registrarActividadCompletada() async {
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      await FirebaseFirestore.instance
+          .collection('01')
+          .doc(user.uid)
+          .collection('actividades_completadas')
+          .add({
+        'nombre': widget.actividad.nombre,
+        'descripcion': widget.actividad.descripcion,
+        'duracion': widget.actividad.duracion,
+        'intensidad': widget.actividad.intensidad,
+        'agilidad': widget.actividad.agilidad,
+        'fecha': DateTime.now(),
+      });
+    }
+
+    _mostrarActividadCompletada();
   }
 
   void _mostrarActividadCompletada() {
@@ -320,21 +343,23 @@ class _TemporizadorScreenState extends State<TemporizadorScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Tiempo restante: ${_formatearTiempo(segundosRestantes)}',
+                  _formatearTiempo(segundosRestantes),
                   style: const TextStyle(
-                    fontSize: 28,
-                    color: Color.fromARGB(255, 255, 123, 0),
+                    fontSize: 48,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white, // Color del temporizador
                   ),
                 ),
                 const SizedBox(height: 20),
                 CircularProgressIndicator(
                   value: progreso,
-                  backgroundColor: Colors.grey,
-                  valueColor: const AlwaysStoppedAnimation<Color>(
-                      Color.fromARGB(255, 255, 123, 0)),
+                  strokeWidth: 10,
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                      const Color.fromARGB(
+                          255, 255, 102, 0)), // Color de la barra circular
                 ),
-                const SizedBox(height: 20),
-                Row(
+                const SizedBox(height: 40),
+                Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ElevatedButton.icon(
@@ -342,19 +367,19 @@ class _TemporizadorScreenState extends State<TemporizadorScreen> {
                       icon: const Icon(Icons.pause),
                       label: const Text('Pausar'),
                     ),
-                    const SizedBox(width: 10),
+                    const SizedBox(height: 10), // Espacio entre botones
                     ElevatedButton.icon(
                       onPressed: _reanudarTemporizador,
                       icon: const Icon(Icons.play_arrow),
                       label: const Text('Reanudar'),
                     ),
+                    const SizedBox(height: 10), // Espacio entre botones
+                    ElevatedButton.icon(
+                      onPressed: _reiniciarTemporizador,
+                      icon: const Icon(Icons.restart_alt),
+                      label: const Text('Reiniciar'),
+                    ),
                   ],
-                ),
-                const SizedBox(height: 20),
-                ElevatedButton.icon(
-                  onPressed: _reiniciarTemporizador,
-                  icon: const Icon(Icons.repeat),
-                  label: const Text('Reiniciar'),
                 ),
               ],
             ),
@@ -365,7 +390,7 @@ class _TemporizadorScreenState extends State<TemporizadorScreen> {
   }
 
   String _formatearTiempo(int segundos) {
-    final minutos = (segundos ~/ 60) % 60;
+    final minutos = segundos ~/ 60;
     final segundosRestantes = segundos % 60;
     return '${minutos.toString().padLeft(2, '0')}:${segundosRestantes.toString().padLeft(2, '0')}';
   }

@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      title: 'Plan - Resistencia',
+      title: 'Plan - Perder peso',
       home: PlanPeso(),
     );
   }

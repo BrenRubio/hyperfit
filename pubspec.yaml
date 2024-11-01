@@ -41,6 +41,7 @@ dependencies:
   cloud_firestore: ^5.4.4
   image_picker: ^1.1.2
   fl_chart: ^0.69.0
+  syncfusion_flutter_charts: ^27.1.57
 
 dev_dependencies:
   flutter_test:

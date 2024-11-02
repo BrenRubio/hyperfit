@@ -5,7 +5,7 @@ import 'package:flutter_hyperfit/paginas/pantalla_principal.dart';
 import 'package:flutter_hyperfit/paginas/perfil_usuario.dart';
 import 'package:flutter_hyperfit/paginas/registro.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:google_sign_in/google_sign_in.dart'; // Importa Google Sign-In
+import 'package:google_sign_in/google_sign_in.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

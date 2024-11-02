@@ -4,6 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class Progreso extends StatefulWidget {
+  const Progreso({super.key});
+
   @override
   _ProgresoState createState() => _ProgresoState();
 }
@@ -19,40 +21,28 @@ class _ProgresoState extends State<Progreso> {
   @override
   void initState() {
     super.initState();
-    obtenerCaloriasTotal();
-    obtenerResistenciaTotal();
-    obtenerFlexibilidadTotal();
-    obtenerCargaTotal();
-    obtenerDatosGrafico();
+    _obtenerTotales();
+    _obtenerDatosGrafico();
   }
 
-  Future<void> obtenerCaloriasTotal() async {
+  /// Obtiene los valores totales de calorías, resistencia, agilidad y carga.
+  Future<void> _obtenerTotales() async {
     if (user == null) return;
 
-    int totalCaloriasTemp = 0;
-    QuerySnapshot snapshot = await FirebaseFirestore.instance
-        .collection('01')
-        .doc(user!.uid)
-        .collection('actividades_completadas')
-        .get();
-
-    for (var doc in snapshot.docs) {
-      final data = doc.data() as Map<String, dynamic>?;
-      if (data != null && data['calorias'] != null) {
-        totalCaloriasTemp += (data['calorias'] as num).toInt();
-      }
-    }
+    final valores = await _obtenerValoresTotales(
+        ['calorias', 'tiempo', 'agilidad', 'carga']);
     setState(() {
-      totalCalorias = totalCaloriasTemp;
+      totalCalorias = valores['calorias'] ?? 0;
+      totalTiempo = valores['tiempo'] ?? 0;
+      totalAgilidad = valores['agilidad'] ?? 0;
+      totalCarga = valores['carga'] ?? 0;
     });
   }
 
-  Future<void> obtenerResistenciaTotal() async {
-    if (user == null) return; // Retorna si el usuario no está autenticado
-
-    int totalTiempoTemp = 0;
-
-    QuerySnapshot snapshot = await FirebaseFirestore.instance
+  /// Función que consolida la obtención de los totales en una sola llamada a Firebase.
+  Future<Map<String, int>> _obtenerValoresTotales(List<String> campos) async {
+    final valoresTotales = {for (var campo in campos) campo: 0};
+    final snapshot = await FirebaseFirestore.instance
         .collection('01')
         .doc(user!.uid)
         .collection('actividades_completadas')
@@ -60,88 +50,52 @@ class _ProgresoState extends State<Progreso> {
 
     for (var doc in snapshot.docs) {
       final data = doc.data() as Map<String, dynamic>?;
-
-      if (data != null && data['tiempo'] != null) {
-        if (data['tiempo'] is num) {
-          totalTiempoTemp += (data['tiempo'] as num)
-              .toInt(); // Asegúrate de que este valor sea en minutos
+      for (var campo in campos) {
+        if (data != null && data[campo] != null) {
+          valoresTotales[campo] =
+              valoresTotales[campo]! + (data[campo] as num).toInt();
         }
       }
     }
-
-    setState(() {
-      totalTiempo = totalTiempoTemp; // El valor total debe ser el mismo
-    });
+    return valoresTotales;
   }
 
-  Future<void> obtenerFlexibilidadTotal() async {
+  /// Obtiene los datos necesarios para mostrar el gráfico.
+  Future<void> _obtenerDatosGrafico() async {
     if (user == null) return;
 
-    int totalAgilidadTemp = 0;
-    QuerySnapshot snapshot = await FirebaseFirestore.instance
+    final tempData = <_ActividadPorFecha>[];
+    final snapshot = await FirebaseFirestore.instance
         .collection('01')
         .doc(user!.uid)
         .collection('actividades_completadas')
+        .orderBy('fecha')
         .get();
 
-    for (var doc in snapshot.docs) {
-      final data = doc.data() as Map<String, dynamic>?;
-      if (data != null && data['agilidad'] != null) {
-        totalAgilidadTemp += (data['agilidad'] as num).toInt();
-      }
-    }
-    setState(() {
-      totalAgilidad = totalAgilidadTemp;
-    });
-  }
+    if (snapshot.docs.isEmpty) return;
 
-  Future<void> obtenerCargaTotal() async {
-    if (user == null) return;
-
-    int totalCargaTemp = 0;
-    QuerySnapshot snapshot = await FirebaseFirestore.instance
-        .collection('01')
-        .doc(user!.uid)
-        .collection('actividades_completadas')
-        .get();
-
-    for (var doc in snapshot.docs) {
-      final data = doc.data() as Map<String, dynamic>?;
-      if (data != null && data['carga'] != null) {
-        totalCargaTemp += (data['carga'] as num).toInt();
-      }
-    }
-    setState(() {
-      totalCarga = totalCargaTemp;
-    });
-  }
-
-  Future<void> obtenerDatosGrafico() async {
-    if (user == null) return;
-
-    List<_ActividadPorFecha> tempData = [];
-    QuerySnapshot snapshot = await FirebaseFirestore.instance
-        .collection('01')
-        .doc(user!.uid)
-        .collection('actividades_completadas')
-        .get();
-
-    Map<String, int> actividadesPorFecha = {};
+    final fechaInicial = (snapshot.docs.first['fecha'] as Timestamp).toDate();
+    final fechaFinal = (snapshot.docs.last['fecha'] as Timestamp).toDate();
+    final actividadesPorFecha = <String, int>{};
 
     for (var doc in snapshot.docs) {
       final data = doc.data() as Map<String, dynamic>?;
       if (data != null && data['fecha'] != null) {
-        DateTime fecha = (data['fecha'] as Timestamp).toDate();
-        String fechaString = "${fecha.day}/${fecha.month}/${fecha.year}";
-
+        final fecha = (data['fecha'] as Timestamp).toDate();
+        final fechaString = "${fecha.day}/${fecha.month}/${fecha.year}";
         actividadesPorFecha.update(fechaString, (value) => value + 1,
             ifAbsent: () => 1);
       }
     }
 
-    actividadesPorFecha.forEach((fecha, cantidad) {
-      tempData.add(_ActividadPorFecha(fecha, cantidad));
-    });
+    var fechaIterador = fechaInicial;
+    while (!fechaIterador.isAfter(fechaFinal)) {
+      final fechaString =
+          "${fechaIterador.day}/${fechaIterador.month}/${fechaIterador.year}";
+      tempData.add(_ActividadPorFecha(
+          fechaString, actividadesPorFecha[fechaString] ?? 0));
+      fechaIterador = fechaIterador.add(const Duration(days: 1));
+    }
 
     setState(() {
       data = tempData;
@@ -177,70 +131,15 @@ class _ProgresoState extends State<Progreso> {
             ),
           ),
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(18.0),
             child: Column(
               children: [
-                SfCartesianChart(
-                  primaryXAxis: CategoryAxis(),
-                  title: ChartTitle(text: 'Actividades Completadas por Día'),
-                  series: <LineSeries<_ActividadPorFecha, String>>[
-                    LineSeries<_ActividadPorFecha, String>(
-                      dataSource: data,
-                      xValueMapper: (_ActividadPorFecha actividad, _) =>
-                          actividad.fecha,
-                      yValueMapper: (_ActividadPorFecha actividad, _) =>
-                          actividad.cantidad,
-                      markerSettings: MarkerSettings(isVisible: true),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Resultados',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Container(
-                        height: 4,
-                        width: 100,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              Colors.orange,
-                              Colors.white,
-                            ],
-                          ),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 16),
+                _buildGrafico(),
+                const SizedBox(height: 15),
+                _buildResultados(),
+                const SizedBox(height: 25),
                 Expanded(
-                  child: GridView.count(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 16.0,
-                    mainAxisSpacing: 16.0,
-                    children: [
-                      buildCard('Peso perdido', Icons.fitness_center,
-                          '$totalCalorias kcal'),
-                      buildCard('Resistencia', Icons.speed, '$totalTiempo min'),
-                      buildCard('Flexibilidad', Icons.accessibility,
-                          '$totalAgilidad mm'),
-                      buildCard(
-                          'Carga soportada', Icons.scale, '$totalCarga kcal'),
-                    ],
-                  ),
+                  child: _buildGridResultados(),
                 ),
               ],
             ),
@@ -250,7 +149,74 @@ class _ProgresoState extends State<Progreso> {
     );
   }
 
-  Widget buildCard(String title, IconData icon, String value) {
+  Widget _buildGrafico() {
+    return SfCartesianChart(
+      primaryXAxis: const CategoryAxis(
+        autoScrollingMode: AutoScrollingMode.end,
+        autoScrollingDelta: 4,
+      ),
+      zoomPanBehavior: ZoomPanBehavior(
+        enablePanning: true,
+        enableDoubleTapZooming: true,
+      ),
+      title: const ChartTitle(text: 'Actividades realizadas por día'),
+      series: <LineSeries<_ActividadPorFecha, String>>[
+        LineSeries<_ActividadPorFecha, String>(
+          dataSource: data,
+          xValueMapper: (_ActividadPorFecha actividad, _) => actividad.fecha,
+          yValueMapper: (_ActividadPorFecha actividad, _) => actividad.cantidad,
+          markerSettings: const MarkerSettings(isVisible: true),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildResultados() {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Resultados',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 6),
+          Container(
+            height: 4,
+            width: 180,
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [Colors.orange, Colors.white],
+              ),
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildGridResultados() {
+    return GridView.count(
+      crossAxisCount: 2,
+      crossAxisSpacing: 18.0,
+      mainAxisSpacing: 18.0,
+      childAspectRatio: 1.5,
+      children: [
+        _buildCard('Peso perdido', Icons.fitness_center, '$totalCalorias kcal'),
+        _buildCard('Tiempo de resistencia', Icons.speed, '$totalTiempo min'),
+        _buildCard('Agilidad', Icons.accessibility, '  ' '$totalAgilidad mm'),
+        _buildCard('Carga soportada', Icons.scale, '$totalCarga kcal'),
+      ],
+    );
+  }
+
+  Widget _buildCard(String title, IconData icon, String value) {
     return Container(
       decoration: BoxDecoration(
         color: const Color.fromARGB(255, 255, 123, 0).withOpacity(0.9),
@@ -268,14 +234,14 @@ class _ProgresoState extends State<Progreso> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Icon(icon, color: Colors.white, size: 30),
-            const SizedBox(width: 8),
+            Icon(icon, color: const Color.fromARGB(255, 18, 40, 51), size: 30),
+            const SizedBox(width: 10),
             Expanded(
               child: Text(
                 '$title: $value',
                 style: const TextStyle(
                   color: Colors.white,
-                  fontSize: 18,
+                  fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
               ),

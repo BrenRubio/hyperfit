@@ -41,19 +41,22 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
     }
   }
 
-  final List<Widget> _pages = [
+  /* final List<Widget> _pages = [
     const Center(
         child:
             CircularProgressIndicator()), // Temporariamente muestra un cargador
     const Center(child: Text('Plan')),
     const Center(child: Text('Progreso')),
-  ];
+  ]; */
 
   @override
   Widget build(BuildContext context) {
-    if (_currentIndex == 0) {
-      // Actualiza el contenido de la página principal según los datos del usuario
-      return Scaffold(
+    return WillPopScope(
+      onWillPop: () async {
+        // Minimiza la aplicación al presionar el botón de retroceso
+        return false; // Regresa false para no cerrar la aplicación
+      },
+      child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading:
               false, // Evita que se muestre la flecha de retroceso
@@ -124,8 +127,7 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
           child: userData == null
               ? const Center(
                   child:
-                      CircularProgressIndicator(), // Muestra un indicador de carga
-                )
+                      CircularProgressIndicator()) // Muestra un indicador de carga
               : _buildMainPage(), // Llama a la función para construir la página principal
         ),
         bottomNavigationBar: BottomNavigationBar(
@@ -137,8 +139,7 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => const PerfilUsuario(
-                      nombre: 'Perfil',
-                    ), // Navega a PerfilUsuario
+                        nombre: 'Perfil'), // Navega a PerfilUsuario
                   ),
                 );
               } else if (index == 1) {
@@ -180,10 +181,8 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
           unselectedItemColor: Colors.white,
           backgroundColor: const Color.fromARGB(255, 255, 123, 0),
         ),
-      );
-    } else {
-      return _pages[_currentIndex]; // Regresa la página seleccionada
-    }
+      ),
+    );
   }
 
   // Función para construir la página principal con las tarjetas centradas
@@ -257,18 +256,17 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.start, // Ícono a la izquierda
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Icon(icon,
-                  size: 50, color: const Color.fromARGB(255, 255, 123, 0)),
-              const SizedBox(width: 20), // Espacio entre el ícono y el texto
+                  size: 40,
+                  color:
+                      Color.fromARGB(255, 255, 115, 0)), // Ícono a la izquierda
+              const SizedBox(width: 16), // Espacio entre ícono y texto
               Expanded(
-                child: Text(
-                  title,
-                  style: const TextStyle(
-                      fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-              ),
+                  child: Text(title,
+                      style:
+                          const TextStyle(fontSize: 20))), // Texto a la derecha
             ],
           ),
         ),

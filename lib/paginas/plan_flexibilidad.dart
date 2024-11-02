@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hyperfit/paginas/peso_act/general.dart';
+import 'package:flutter_hyperfit/paginas/flexibilidad/dinamicos.dart';
+import 'package:flutter_hyperfit/paginas/flexibilidad/estaticos.dart';
+import 'package:flutter_hyperfit/paginas/flexibilidad/pilates.dart';
+import 'package:flutter_hyperfit/paginas/flexibilidad/yoga.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       title: 'Plan - Flexibilidad',
       home: PlanFlexibilidad(),
     );
@@ -16,9 +21,21 @@ class MyApp extends StatelessWidget {
 }
 
 class PlanFlexibilidad extends StatelessWidget {
+  const PlanFlexibilidad({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false, // Quita la flecha de regreso
+        title: const Center(
+          child: Text(
+            'Plan - Flexibilidad',
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
+        backgroundColor: Colors.black,
+      ),
       body: SafeArea(
         child: Container(
           width: double.infinity,
@@ -39,16 +56,7 @@ class PlanFlexibilidad extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  'Plan - Flexibilidad',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 0),
                 ActivityItem(
                   imageUrl: 'assets/yoga.jpg',
                   buttonText: 'Yoga',
@@ -56,7 +64,7 @@ class PlanFlexibilidad extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => DetalleActividad1()),
+                          builder: (context) => ActividadesYoga()),
                     );
                   },
                 ),
@@ -68,7 +76,7 @@ class PlanFlexibilidad extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => DetalleActividad1()),
+                          builder: (context) => ActividadesPilates()),
                     );
                   },
                 ),
@@ -80,7 +88,7 @@ class PlanFlexibilidad extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => DetalleActividad1()),
+                          builder: (context) => ActividadesEstaticos()),
                     );
                   },
                 ),
@@ -92,7 +100,7 @@ class PlanFlexibilidad extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => DetalleActividad1()),
+                          builder: (context) => ActividadesDinamicas()),
                     );
                   },
                 ),
@@ -110,7 +118,8 @@ class ActivityItem extends StatelessWidget {
   final String buttonText;
   final VoidCallback onTap;
 
-  ActivityItem({
+  const ActivityItem({
+    super.key,
     required this.imageUrl,
     required this.buttonText,
     required this.onTap,

@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: ActividadesCiclismo(),
+      home: ActividadesBandas(),
     );
   }
 }
@@ -27,13 +27,13 @@ class Actividad {
   String descripcion;
   int duracion; // en minutos
   String intensidad;
-  int calorias; // calorías quemadas
+  int carga; // kcal de cargar
 
   Actividad(this.nombre, this.descripcion, this.duracion, this.intensidad,
-      this.calorias);
+      this.carga);
 }
 
-class ActividadesCiclismo extends StatelessWidget {
+class ActividadesBandas extends StatelessWidget {
   final List<Actividad> actividades = [
     Actividad("Actividad1", "Descripción", 1, "Baja", 300),
     Actividad("Actividad2", "Descripción", 45, "Media", 250),
@@ -41,7 +41,7 @@ class ActividadesCiclismo extends StatelessWidget {
     Actividad("Actividad4", "Descripción", 60, "Media", 400),
   ];
 
-  ActividadesCiclismo({super.key});
+  ActividadesBandas({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -116,7 +116,7 @@ class ActividadesCiclismo extends StatelessWidget {
             ),
             const SizedBox(height: 1),
             _buildInfoRow('Intensidad:', actividad.intensidad),
-            _buildInfoRow('Calorías:', '${actividad.calorias} kcal'),
+            _buildInfoRow('Carga:', '${actividad.carga} kcal'),
             _buildInfoRow('Duración:', '${actividad.duracion} min'),
           ],
         ),
@@ -281,7 +281,7 @@ class _TemporizadorScreenState extends State<TemporizadorScreen> {
         'descripcion': widget.actividad.descripcion,
         'duracion': widget.actividad.duracion,
         'intensidad': widget.actividad.intensidad,
-        'calorias': widget.actividad.calorias,
+        'carga': widget.actividad.carga,
         'fecha': DateTime.now(),
       });
     }

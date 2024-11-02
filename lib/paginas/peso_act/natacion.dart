@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:async';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -37,21 +41,22 @@ class ActividadesNatacion extends StatelessWidget {
     Actividad("Actividad4", "Descripción", 60, "Media", 400),
   ];
 
+  ActividadesNatacion({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(
-          child: const Text(
+        title: const Center(
+          child: Text(
             'Actividades',
-            style: TextStyle(
-                color: Colors.white), // Cambia el color del texto aquí
+            style: TextStyle(color: Colors.white),
           ),
         ),
-        backgroundColor: Colors.black, // Azul vibrante
+        backgroundColor: Colors.black,
       ),
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [
               Colors.black,
@@ -75,43 +80,41 @@ class ActividadesNatacion extends StatelessWidget {
 
   Widget _buildCard(BuildContext context, Actividad actividad) {
     return Container(
-      margin:
-          EdgeInsets.all(8), // Reducir margen para hacer la tarjeta más pequeña
+      margin: const EdgeInsets.all(15),
       decoration: BoxDecoration(
-        color: Color.fromARGB(255, 255, 123, 0).withOpacity(0.9),
-        borderRadius: BorderRadius.circular(10),
-        boxShadow: [
+        color: const Color.fromARGB(255, 255, 123, 0).withOpacity(0.9),
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: const [
           BoxShadow(
             color: Colors.black54,
-            offset: Offset(0, 2), // Menos sombra para un diseño más compacto
+            offset: Offset(0, 2),
             blurRadius: 10,
           ),
         ],
       ),
       child: ListTile(
-        contentPadding: EdgeInsets.symmetric(
-            vertical: 12, horizontal: 16), // Ajustar padding
+        contentPadding: const EdgeInsets.symmetric(vertical: 1, horizontal: 26),
         title: Text(
           actividad.nombre,
-          style: TextStyle(
-            fontSize: 20, // Tamaño de fuente más pequeño
+          style: const TextStyle(
+            fontSize: 20,
             fontWeight: FontWeight.bold,
-            color: Color.fromARGB(255, 20, 0, 133),
+            color: Color.fromARGB(255, 8, 80, 212),
           ),
         ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 4),
+            const SizedBox(height: 1),
             Text(
               actividad.descripcion,
-              style: TextStyle(
-                fontSize: 14, // Tamaño de fuente más pequeño
+              style: const TextStyle(
+                fontSize: 14,
                 fontStyle: FontStyle.italic,
                 color: Colors.white70,
               ),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 1),
             _buildInfoRow('Intensidad:', actividad.intensidad),
             _buildInfoRow('Calorías:', '${actividad.calorias} kcal'),
             _buildInfoRow('Duración:', '${actividad.duracion} min'),
@@ -124,21 +127,21 @@ class ActividadesNatacion extends StatelessWidget {
 
   Widget _buildInfoRow(String title, String value) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2),
+      padding: const EdgeInsets.symmetric(vertical: 1),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
             title,
-            style: TextStyle(
-              fontSize: 14, // Tamaño de fuente más pequeño
+            style: const TextStyle(
+              fontSize: 14,
               color: Colors.white,
             ),
           ),
           Text(
             value,
-            style: TextStyle(
-              fontSize: 14, // Tamaño de fuente más pequeño
+            style: const TextStyle(
+              fontSize: 14,
               color: Color.fromARGB(255, 0, 17, 65),
               fontWeight: FontWeight.bold,
             ),
@@ -153,7 +156,7 @@ class ActividadesNatacion extends StatelessWidget {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Iniciar Actividad'),
+          title: const Text('Iniciar Actividad'),
           content: Text('¿Deseas realizar ${actividad.nombre}?'),
           actions: [
             TextButton(
@@ -166,13 +169,13 @@ class ActividadesNatacion extends StatelessWidget {
                   ),
                 );
               },
-              child: Text('Sí'),
+              child: const Text('Sí'),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('No'),
+              child: const Text('No'),
             ),
           ],
         );
@@ -184,7 +187,7 @@ class ActividadesNatacion extends StatelessWidget {
 class TemporizadorScreen extends StatefulWidget {
   final Actividad actividad;
 
-  TemporizadorScreen({required this.actividad});
+  const TemporizadorScreen({super.key, required this.actividad});
 
   @override
   _TemporizadorScreenState createState() => _TemporizadorScreenState();
@@ -194,6 +197,7 @@ class _TemporizadorScreenState extends State<TemporizadorScreen> {
   int segundosRestantes = 0;
   late Timer _timer;
   double progreso = 1.0;
+  bool _estaPausado = false;
 
   @override
   void initState() {
@@ -203,17 +207,86 @@ class _TemporizadorScreenState extends State<TemporizadorScreen> {
   }
 
   void _iniciarTemporizador() {
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      if (segundosRestantes > 0) {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (!_estaPausado && segundosRestantes > 0) {
         setState(() {
           segundosRestantes--;
           progreso = segundosRestantes / (widget.actividad.duracion * 60);
         });
-      } else {
+      } else if (segundosRestantes == 0) {
         _timer.cancel();
-        _mostrarActividadCompletada();
+        _registrarActividadCompletada();
       }
     });
+  }
+
+  void _pausarTemporizador() {
+    setState(() {
+      _estaPausado = true;
+    });
+  }
+
+  void _reanudarTemporizador() {
+    setState(() {
+      _estaPausado = false;
+    });
+  }
+
+  void _reiniciarTemporizador() {
+    setState(() {
+      segundosRestantes = widget.actividad.duracion * 60;
+      progreso = 1.0;
+      _estaPausado = false;
+    });
+  }
+
+  Future<bool> _onWillPop() async {
+    bool? cancelar = await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Cancelar Actividad'),
+          content:
+              const Text('¿Estás seguro de que deseas cancelar la actividad?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false); // No cancelar
+              },
+              child: const Text('No'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(true); // Cancelar
+              },
+              child: const Text('Sí'),
+            ),
+          ],
+        );
+      },
+    );
+    return cancelar ?? false; // Devuelve false si el usuario no responde
+  }
+
+  void _registrarActividadCompletada() async {
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      await FirebaseFirestore.instance
+          .collection('01')
+          .doc(user.uid)
+          .collection('actividades_completadas')
+          .add({
+        'nombre': widget.actividad.nombre,
+        'descripcion': widget.actividad.descripcion,
+        'duracion': widget.actividad.duracion,
+        'intensidad': widget.actividad.intensidad,
+        'calorias': widget.actividad.calorias,
+        'fecha': DateTime.now(),
+      });
+    }
+
+    _mostrarActividadCompletada();
   }
 
   void _mostrarActividadCompletada() {
@@ -221,7 +294,7 @@ class _TemporizadorScreenState extends State<TemporizadorScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Actividad Completada'),
+          title: const Text('Actividad Completada'),
           content:
               Text('Has completado la actividad: ${widget.actividad.nombre}'),
           actions: [
@@ -230,7 +303,7 @@ class _TemporizadorScreenState extends State<TemporizadorScreen> {
                 Navigator.of(context).pop();
                 Navigator.of(context).pop(); // Volver a la pantalla anterior
               },
-              child: Text('Aceptar'),
+              child: const Text('Aceptar'),
             ),
           ],
         );
@@ -246,52 +319,78 @@ class _TemporizadorScreenState extends State<TemporizadorScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Temporizador: ${widget.actividad.nombre}',
+    return PopScope(
+      onPopInvoked: (didPop) {
+        // Llamada a `_onWillPop` de manera asincrónica
+        Future.delayed(Duration.zero, () async {
+          bool shouldPop = await _onWillPop();
+          if (shouldPop) {
+            Navigator.of(context).maybePop();
+          }
+        });
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('Temporizador: ${widget.actividad.nombre}'),
+          backgroundColor: const Color.fromARGB(255, 0, 0, 0),
         ),
-        backgroundColor: Color.fromARGB(255, 0, 0, 0), // Azul vibrante
-      ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Colors.black,
-              Color.fromARGB(255, 18, 40, 51),
-              Colors.black,
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
+        body: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Colors.black,
+                Color.fromARGB(255, 18, 40, 51),
+                Colors.black,
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
           ),
-        ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Tiempo restante: ${_formatearTiempo(segundosRestantes)}',
-                style: TextStyle(
-                    fontSize: 28,
-                    color:
-                        Color.fromARGB(255, 255, 123, 0)), // Color anaranjado
-              ),
-              SizedBox(height: 20),
-              CircularProgressIndicator(
-                value: progreso, // Valor entre 0 y 1
-                strokeWidth: 8,
-                backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
-              ),
-              SizedBox(height: 20),
-              Text(
-                'Duración total: ${widget.actividad.duracion} minutos',
-                style: TextStyle(
-                    fontSize: 20,
-                    color:
-                        Color.fromARGB(255, 255, 123, 0)), // Color anaranjado
-              ),
-            ],
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  _formatearTiempo(segundosRestantes),
+                  style: const TextStyle(
+                    fontSize: 48,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white, // Color del temporizador
+                  ),
+                ),
+                const SizedBox(height: 20),
+                CircularProgressIndicator(
+                  value: progreso,
+                  strokeWidth: 10,
+                  valueColor: const AlwaysStoppedAnimation<Color>(
+                      Color.fromARGB(
+                          255, 255, 102, 0)), // Color de la barra circular
+                ),
+                const SizedBox(height: 40),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton.icon(
+                      onPressed: _pausarTemporizador,
+                      icon: const Icon(Icons.pause),
+                      label: const Text('Pausar'),
+                    ),
+                    const SizedBox(height: 10), // Espacio entre botones
+                    ElevatedButton.icon(
+                      onPressed: _reanudarTemporizador,
+                      icon: const Icon(Icons.play_arrow),
+                      label: const Text('Reanudar'),
+                    ),
+                    const SizedBox(height: 10), // Espacio entre botones
+                    ElevatedButton.icon(
+                      onPressed: _reiniciarTemporizador,
+                      icon: const Icon(Icons.restart_alt),
+                      label: const Text('Reiniciar'),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -299,8 +398,8 @@ class _TemporizadorScreenState extends State<TemporizadorScreen> {
   }
 
   String _formatearTiempo(int segundos) {
-    int minutos = segundos ~/ 60;
-    int segundosRestantes = segundos % 60;
+    final minutos = segundos ~/ 60;
+    final segundosRestantes = segundos % 60;
     return '${minutos.toString().padLeft(2, '0')}:${segundosRestantes.toString().padLeft(2, '0')}';
   }
 }

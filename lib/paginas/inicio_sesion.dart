@@ -10,7 +10,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(inicio_sesion());
+  runApp(const inicio_sesion());
 }
 
 class inicio_sesion extends StatelessWidget {
@@ -18,7 +18,7 @@ class inicio_sesion extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: InicioSesion(),
     );
   }
@@ -244,10 +244,9 @@ class _InicioSesionState extends State<InicioSesion> {
                   shadowColor: Colors.black.withOpacity(0.5),
                   elevation: 10,
                 ),
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-                  child: const Text(
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                  child: Text(
                     'Iniciar Sesión',
                     style: TextStyle(fontSize: 18, color: Colors.white),
                   ),

@@ -1,30 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/services.dart'; // Importa el paquete necesario para los inputFormatters
-import 'package:flutter_hyperfit/paginas/pantalla_principal.dart'; // Importa tu pantalla principal
+import 'package:flutter_hyperfit/paginas/pantalla_principal.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 class PerfilUsuario extends StatefulWidget {
-  final String nombre; // Recibir nombre como parámetro
-
-  const PerfilUsuario({super.key, required this.nombre}); // Constructor
+  const PerfilUsuario({super.key, required String nombre});
 
   @override
   _PerfilUsuarioState createState() => _PerfilUsuarioState();
 }
 
 class _PerfilUsuarioState extends State<PerfilUsuario> {
-  late TextEditingController _nombreController;
+  final _formKey = GlobalKey<FormState>();
+  final _nombreController = TextEditingController();
   final _edadController = TextEditingController();
   final _pesoController = TextEditingController();
   final _estaturaController = TextEditingController();
   String _sexo = 'Masculino'; // Valor predeterminado
+  bool _modoEdicion = false; // Controla si se puede editar o no
+  File? _imageFile; // Para almacenar la imagen seleccionada
 
   @override
   void initState() {
     super.initState();
-    // Inicializa el controlador del nombre con el nombre que se pasó desde el registro
-    _nombreController = TextEditingController(text: widget.nombre);
+    _cargarDatosPerfil(); // Carga los datos al iniciar la pantalla
   }
 
   @override
@@ -37,23 +38,104 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _cargarDatosPerfil(); // Carga los datos cada vez que se muestra la pantalla
+  }
+
+  Future<void> _cargarDatosPerfil() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        DocumentSnapshot<Map<String, dynamic>> snapshot =
+            await FirebaseFirestore.instance
+                .collection('01')
+                .doc(user.uid)
+                .get();
+
+        if (snapshot.exists) {
+          // Asigna los valores a los controladores
+          _nombreController.text = snapshot.data()?['nombre'] ?? '';
+          _edadController.text = snapshot.data()?['edad']?.toString() ?? '';
+          _pesoController.text = snapshot.data()?['peso']?.toString() ?? '';
+          _estaturaController.text =
+              snapshot.data()?['estatura']?.toString() ?? '';
+          _sexo = snapshot.data()?['sexo'] ?? 'Masculino';
+          _imageFile = snapshot.data()?['imageUrl'] != null
+              ? File(snapshot.data()!['imageUrl'])
+              : null; // Cargar la imagen desde Firestore
+          setState(() {}); // Refresca la UI
+
+          // Muestra un mensaje indicando que se necesita modificar el perfil
+          if (_nombreController.text.isEmpty ||
+              _edadController.text.isEmpty ||
+              _pesoController.text.isEmpty ||
+              _estaturaController.text.isEmpty) {
+            _mostrarAlerta();
+          }
+        }
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Error al cargar el perfil')),
+      );
+    }
+  }
+
+  void _mostrarAlerta() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Perfil incompleto'),
+          content: const Text(
+              'Por favor, modifica tu perfil para completar tu cuenta.'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Cierra el diálogo
+              },
+              child: const Text('Aceptar'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _pickImage() async {
+    final ImagePicker picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _imageFile = File(pickedFile.path);
+      });
+    }
+  }
+
+  void _removeImage() {
+    setState(() {
+      _imageFile = null; // Quitar la imagen del perfil
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false, // Quita la flecha de regreso
-        title: Center(
-          child: const Text(
+        title: const Center(
+          child: Text(
             'Perfil usuario',
-            style: TextStyle(
-                color: Colors.white), // Cambia el color del texto aquí
+            style: TextStyle(color: Colors.white),
           ),
         ),
         backgroundColor: Colors.black,
       ),
       body: SafeArea(
         child: Container(
-          width: double.infinity, // Ocupa todo el ancho disponible
-          height: double.infinity, // Ocupa todo el alto disponible
+          width: double.infinity,
+          height: double.infinity,
           decoration: const BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,
@@ -68,49 +150,113 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
           child: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: <Widget>[
-                  const SizedBox(height: 2),
-                  const CircleAvatar(
-                    radius: 50,
-                    backgroundImage: AssetImage('assets/perfil.png'),
-                  ),
-                  const SizedBox(height: 20),
-                  _crearCampoTexto('Nombre', _nombreController,
-                      readOnly:
-                          true), // Nombre autocompletado y de solo lectura
-                  const SizedBox(height: 10),
-                  _crearCampoTexto('Edad', _edadController,
-                      isNumber: true, maxLength: 3),
-                  const SizedBox(height: 10),
-                  _crearCampoTexto('Peso (Kg)', _pesoController,
-                      isNumber: true, maxLength: 4),
-                  const SizedBox(height: 10),
-                  _crearCampoTexto('Estatura (Mtrs)', _estaturaController,
-                      isNumber: true, maxLength: 4),
-                  const SizedBox(height: 05),
-                  _crearCampoDropdown('Sexo', ['Masculino', 'Femenino']),
-                  const SizedBox(height: 30),
-                  ElevatedButton(
-                    onPressed: () {
-                      _guardarPerfil();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue[900],
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: <Widget>[
+                    const SizedBox(height: 2),
+                    GestureDetector(
+                      onTap: _modoEdicion
+                          ? _pickImage
+                          : null, // Solo permite seleccionar imagen en modo edición
+                      child: CircleAvatar(
+                        radius: 50,
+                        backgroundImage: _imageFile != null
+                            ? FileImage(_imageFile!)
+                            : const AssetImage('assets/perfil.png')
+                                as ImageProvider,
                       ),
-                      shadowColor: Colors.black.withOpacity(0.5),
-                      elevation: 10,
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 30, vertical: 10),
-                      child: Text('Guardar',
-                          style: TextStyle(fontSize: 18, color: Colors.white)),
+                    const SizedBox(height: 20),
+                    _crearCampoTexto('Nombre', _nombreController,
+                        readOnly: !_modoEdicion),
+                    const SizedBox(height: 10),
+                    _crearCampoTexto('Edad', _edadController,
+                        isNumber: true, maxLength: 3, readOnly: !_modoEdicion),
+                    const SizedBox(height: 10),
+                    _crearCampoTexto('Peso (Kg)', _pesoController,
+                        isNumber: true, maxLength: 3, readOnly: !_modoEdicion),
+                    const SizedBox(height: 10),
+                    _crearCampoTexto('Estatura (Cm)', _estaturaController,
+                        isNumber: true, maxLength: 3, readOnly: !_modoEdicion),
+                    const SizedBox(height: 5),
+                    _crearCampoDropdown('Sexo', ['Masculino', 'Femenino'],
+                        readOnly: !_modoEdicion),
+                    const SizedBox(height: 30),
+                    ElevatedButton(
+                      onPressed: _modoEdicion
+                          ? () {
+                              if (_formKey.currentState!.validate()) {
+                                _guardarPerfil();
+                              }
+                            }
+                          : null,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            _modoEdicion ? Colors.blue[900] : Colors.grey,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        shadowColor: Colors.black.withOpacity(0.5),
+                        elevation: 10,
+                      ),
+                      child: const Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                        child: Text(
+                          'Guardar',
+                          style: TextStyle(fontSize: 18, color: Colors.white),
+                        ),
+                      ),
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 10),
+                    ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          _modoEdicion = !_modoEdicion;
+                        });
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color.fromARGB(255, 236, 193, 0),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        shadowColor: Colors.black.withOpacity(0.5),
+                        elevation: 10,
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 30, vertical: 10),
+                        child: Text(
+                          _modoEdicion ? 'Cancelar' : 'Modificar',
+                          style: const TextStyle(
+                              fontSize: 18, color: Colors.black),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    if (_modoEdicion && _imageFile != null)
+                      ElevatedButton(
+                        onPressed: _removeImage,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          shadowColor: Colors.black.withOpacity(0.5),
+                          elevation: 10,
+                        ),
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 10),
+                          child: Text(
+                            'Quitar foto',
+                            style: TextStyle(fontSize: 18, color: Colors.white),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -122,48 +268,50 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
   Widget _crearCampoTexto(String label, TextEditingController controller,
       {bool isNumber = false, bool readOnly = false, int? maxLength}) {
     return Container(
-      width: double
-          .infinity, // Asegura que el campo ocupe todo el ancho disponible
+      width: double.infinity,
       decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 255, 123, 0).withOpacity(0.9),
+        color: Colors.white.withOpacity(0.9),
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.2),
+            color: Colors.white.withOpacity(0.2),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
         ],
       ),
-      margin: const EdgeInsets.symmetric(vertical: 5), // Espaciado vertical
       child: TextFormField(
         controller: controller,
         keyboardType: isNumber ? TextInputType.number : TextInputType.text,
-        readOnly:
-            readOnly, // Hace que el campo sea de solo lectura si está activado
-        inputFormatters: isNumber
-            ? <TextInputFormatter>[
-                FilteringTextInputFormatter.digitsOnly, // Solo permite números
-                LengthLimitingTextInputFormatter(
-                    maxLength), // Limita a 4 caracteres
-              ]
-            : null, // No aplica si no es número
+        maxLength: maxLength,
+        readOnly: readOnly,
         decoration: InputDecoration(
           labelText: label,
           labelStyle: const TextStyle(color: Colors.white),
-          border: InputBorder.none,
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+          border: const OutlineInputBorder(),
+          filled: true,
+          fillColor: const Color.fromARGB(255, 255, 123, 0).withOpacity(0.9),
+
+          focusedBorder: const OutlineInputBorder(
+            borderSide:
+                BorderSide(color: Color.fromARGB(255, 255, 102, 0), width: 2),
+          ),
+          counterText: '', // Oculta el contador de caracteres
         ),
-        style: const TextStyle(color: Colors.white),
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Este campo es obligatorio';
+          }
+          return null;
+        },
       ),
     );
   }
 
-  Widget _crearCampoDropdown(String label, List<String> opciones) {
+  Widget _crearCampoDropdown(String label, List<String> opciones,
+      {bool readOnly = false}) {
     return Container(
-      width: double
-          .infinity, // Asegura que el dropdown ocupe todo el ancho disponible
+      width: double.infinity,
       decoration: BoxDecoration(
         color: const Color.fromARGB(255, 255, 123, 0).withOpacity(0.9),
         borderRadius: BorderRadius.circular(10),
@@ -175,102 +323,70 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
           ),
         ],
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      margin: const EdgeInsets.symmetric(vertical: 5), // Espaciado vertical
       child: DropdownButtonFormField<String>(
         value: _sexo,
-        isExpanded: true, // Asegura que el dropdown ocupe todo el ancho
-        onChanged: (String? nuevoValor) {
-          setState(() {
-            _sexo = nuevoValor!;
-          });
-        },
+        onChanged: readOnly
+            ? null
+            : (newValue) {
+                setState(() {
+                  _sexo = newValue!;
+                });
+              },
         decoration: InputDecoration(
           labelText: label,
           labelStyle: const TextStyle(color: Colors.white),
-          border: InputBorder.none,
+          border: const OutlineInputBorder(),
+          filled: true,
+          fillColor: const Color.fromARGB(255, 255, 123, 0).withOpacity(0.9),
+          enabledBorder: const OutlineInputBorder(
+            borderSide:
+                BorderSide(color: Color.fromARGB(255, 255, 102, 0), width: 2),
+          ),
+          focusedBorder: const OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.blue, width: 2),
+          ),
         ),
-        items: opciones
-            .map((opcion) => DropdownMenuItem<String>(
-                  value: opcion,
-                  child:
-                      Text(opcion, style: const TextStyle(color: Colors.black)),
-                ))
-            .toList(),
-        style: const TextStyle(color: Colors.black),
+        items: opciones.map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value,
+                style: const TextStyle(color: Color.fromARGB(255, 0, 0, 0))),
+          );
+        }).toList(),
       ),
     );
   }
 
   Future<void> _guardarPerfil() async {
-    // Validar campos vacíos
-    if (_nombreController.text.isEmpty) {
-      _showAlert('El nombre es obligatorio');
-      return;
-    }
-    if (_edadController.text.isEmpty) {
-      _showAlert('La edad es obligatoria');
-      return;
-    }
-    if (_pesoController.text.isEmpty) {
-      _showAlert('El peso es obligatorio');
-      return;
-    }
-    if (_estaturaController.text.isEmpty) {
-      _showAlert('La estatura es obligatoria');
-      return;
-    }
-
     try {
       final user = FirebaseAuth.instance.currentUser;
-
       if (user != null) {
-        await FirebaseFirestore.instance.collection('01').doc(user.uid).set({
-          'correo': user.email,
-          'nombre': _nombreController.text,
-          'edad': int.parse(_edadController.text),
-          'peso': double.parse(_pesoController.text),
-          'estatura': double.parse(_estaturaController.text),
-          'sexo': _sexo,
-        });
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Perfil guardado correctamente')),
+        await FirebaseFirestore.instance.collection('01').doc(user.uid).set(
+          {
+            'nombre': _nombreController.text,
+            'edad': int.tryParse(_edadController.text),
+            'peso': int.tryParse(_pesoController.text),
+            'estatura': int.tryParse(_estaturaController.text),
+            'sexo': _sexo,
+            'imageUrl': _imageFile?.path, // Guardar la ruta de la imagen
+          },
+          SetOptions(merge: true), // Combina datos sin eliminar otros campos
         );
-
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Perfil guardado con éxito')),
+        );
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) =>
-                PantallaPrincipal(nombre: _nombreController.text),
-          ),
+              builder: (context) => const PantallaPrincipal(
+                    nombre: '',
+                  )),
         );
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error al guardar el perfil: $e')),
+        const SnackBar(content: Text('Error al guardar el perfil')),
       );
     }
-  }
-
-  // Método para mostrar alertas
-  void _showAlert(String message) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Error'),
-          content: Text(message),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Aceptar'),
-              onPressed: () {
-                Navigator.of(context).pop(); // Cerrar el diálogo
-              },
-            ),
-          ],
-        );
-      },
-    );
   }
 }

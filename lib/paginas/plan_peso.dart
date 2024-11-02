@@ -5,23 +5,37 @@ import 'package:flutter_hyperfit/paginas/peso_act/ciclismo.dart';
 import 'package:flutter_hyperfit/paginas/peso_act/natacion.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Plan - Resistencia',
+    return const MaterialApp(
+      title: 'Plan - Perder peso',
       home: PlanPeso(),
     );
   }
 }
 
 class PlanPeso extends StatelessWidget {
+  const PlanPeso({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false, // Quita la flecha de regreso
+        title: const Center(
+          child: Text(
+            'Plan - Perder peso',
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
+        backgroundColor: Colors.black,
+      ),
       body: SafeArea(
         child: Container(
           width: double.infinity,
@@ -42,16 +56,7 @@ class PlanPeso extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  'Plan - Perder peso',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 0),
                 ActivityItem(
                   imageUrl: 'assets/ciclismo.jpg',
                   buttonText: 'Ciclismo',
@@ -113,7 +118,8 @@ class ActivityItem extends StatelessWidget {
   final String buttonText;
   final VoidCallback onTap;
 
-  ActivityItem({
+  const ActivityItem({
+    super.key,
     required this.imageUrl,
     required this.buttonText,
     required this.onTap,

@@ -17,25 +17,25 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: loading(),
+      home: Loading(),
     );
   }
 }
 
-class loading extends StatefulWidget {
-  const loading({super.key});
+class Loading extends StatefulWidget {
+  const Loading({super.key});
 
   @override
-  State<loading> createState() => _loadingState();
+  State<Loading> createState() => _LoadingState();
 }
 
-class _loadingState extends State<loading> {
+class _LoadingState extends State<Loading> {
   @override
   void initState() {
     Future.delayed(
       const Duration(milliseconds: 2000),
-      () => Navigator.push(
-          context, MaterialPageRoute(builder: (context) => InicioSesion())),
+      () => Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const InicioSesion())),
     );
     super.initState();
   }

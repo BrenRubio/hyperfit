@@ -319,8 +319,16 @@ class _TemporizadorScreenState extends State<TemporizadorScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: _onWillPop,
+    return PopScope(
+      onPopInvoked: (didPop) {
+        // Llamada a `_onWillPop` de manera asincrónica
+        Future.delayed(Duration.zero, () async {
+          bool shouldPop = await _onWillPop();
+          if (shouldPop) {
+            Navigator.of(context).maybePop();
+          }
+        });
+      },
       child: Scaffold(
         appBar: AppBar(
           title: Text('Temporizador: ${widget.actividad.nombre}'),
@@ -354,8 +362,8 @@ class _TemporizadorScreenState extends State<TemporizadorScreen> {
                 CircularProgressIndicator(
                   value: progreso,
                   strokeWidth: 10,
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                      const Color.fromARGB(
+                  valueColor: const AlwaysStoppedAnimation<Color>(
+                      Color.fromARGB(
                           255, 255, 102, 0)), // Color de la barra circular
                 ),
                 const SizedBox(height: 40),

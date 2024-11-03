@@ -5,6 +5,7 @@ import 'package:flutter_hyperfit/objetivos.dart';
 import 'package:flutter_hyperfit/paginas/inicio_sesion.dart';
 import 'package:flutter_hyperfit/paginas/perfil_usuario.dart';
 import 'package:flutter_hyperfit/progreso.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class PantallaPrincipal extends StatefulWidget {
   final String nombre; // Variable para almacenar el nombre
@@ -70,44 +71,45 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
           elevation: 0,
           actions: [
             IconButton(
-              icon: const Icon(
-                Icons.logout,
-                color: Colors.white, // Color del icono
-              ),
-              onPressed: () async {
-                // Mostrar un diálogo de confirmación
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: const Text('Confirmar salida'),
-                      content: const Text('¿Realmente desea salir?'),
-                      actions: <Widget>[
-                        TextButton(
-                          child: const Text('Cancelar'),
-                          onPressed: () {
-                            Navigator.of(context)
-                                .pop(); // Cierra el diálogo sin hacer nada
-                          },
-                        ),
-                        TextButton(
-                          child: const Text('Aceptar'),
-                          onPressed: () async {
-                            await FirebaseAuth.instance.signOut();
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const InicioSesion(),
-                              ),
-                            );
-                          },
-                        ),
-                      ],
-                    );
-                  },
-                );
-              },
-            ),
+                icon: const Icon(
+                  Icons.logout,
+                  color: Colors.white, // Color del icono
+                ),
+                onPressed: () async {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Text('Confirmar salida'),
+                        content: const Text('¿Realmente desea salir?'),
+                        actions: <Widget>[
+                          TextButton(
+                            child: const Text('Cancelar'),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                          TextButton(
+                            child: const Text('Aceptar'),
+                            onPressed: () async {
+                              // Cerrar sesión de Firebase y Google
+                              await FirebaseAuth.instance.signOut();
+                              await GoogleSignIn()
+                                  .signOut(); // Añadir esta línea para cerrar sesión de Google
+
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const InicioSesion(),
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                }),
           ],
         ),
         extendBodyBehindAppBar: true,

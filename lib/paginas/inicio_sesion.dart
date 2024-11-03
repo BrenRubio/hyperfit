@@ -141,6 +141,7 @@ class _InicioSesionState extends State<InicioSesion> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -245,7 +246,7 @@ class _InicioSesionState extends State<InicioSesion> {
                   elevation: 10,
                 ),
                 child: const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                  padding: EdgeInsets.symmetric(horizontal: 30, vertical: 12),
                   child: Text(
                     'Iniciar Sesión',
                     style: TextStyle(fontSize: 18, color: Colors.white),
@@ -255,11 +256,13 @@ class _InicioSesionState extends State<InicioSesion> {
               const SizedBox(height: 20),
               // Botón para iniciar sesión con Google
               ElevatedButton.icon(
-                icon: const Icon(Icons.login),
+                icon: const Icon(Icons.g_mobiledata),
                 onPressed: _signInWithGoogle,
-                label: const Text('Iniciar sesión con Google'),
+                label: const Text('Iniciar con Google'),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
+                  backgroundColor: Color.fromARGB(255, 221, 39, 48),
+                  foregroundColor:
+                      Colors.white, // Cambia el color de texto y el icono
                 ),
               ),
               const SizedBox(height: 20),

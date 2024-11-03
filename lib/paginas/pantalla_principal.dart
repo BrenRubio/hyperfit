@@ -262,8 +262,8 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
             children: [
               Icon(icon,
                   size: 40,
-                  color:
-                      Color.fromARGB(255, 255, 115, 0)), // Ícono a la izquierda
+                  color: const Color.fromARGB(
+                      255, 255, 115, 0)), // Ícono a la izquierda
               const SizedBox(width: 16), // Espacio entre ícono y texto
               Expanded(
                   child: Text(title,

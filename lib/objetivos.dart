@@ -34,8 +34,8 @@ class ObjetivoScreen extends StatelessWidget {
           width: double.infinity,
           height: double.infinity,
           decoration: const BoxDecoration(gradient: _backgroundGradient),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
+          child: const Padding(
+            padding: EdgeInsets.all(16.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -46,20 +46,20 @@ class ObjetivoScreen extends StatelessWidget {
                       child: ObjetivoButton(
                         label: 'Perder peso',
                         imagePath: 'assets/peso.jpg',
-                        targetPage: const PlanPeso(),
+                        targetPage: PlanPeso(),
                       ),
                     ),
-                    const SizedBox(width: 16),
+                    SizedBox(width: 16),
                     Expanded(
                       child: ObjetivoButton(
                         label: 'Resistencia',
                         imagePath: 'assets/resistencia.jpg',
-                        targetPage: const PlanResistencia(),
+                        targetPage: PlanResistencia(),
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
+                SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -67,15 +67,15 @@ class ObjetivoScreen extends StatelessWidget {
                       child: ObjetivoButton(
                         label: 'Flexibilidad',
                         imagePath: 'assets/flexibilidad.jpg',
-                        targetPage: const PlanFlexibilidad(),
+                        targetPage: PlanFlexibilidad(),
                       ),
                     ),
-                    const SizedBox(width: 16),
+                    SizedBox(width: 16),
                     Expanded(
                       child: ObjetivoButton(
                         label: 'Fuerza',
                         imagePath: 'assets/fuerza.jpg',
-                        targetPage: const PlanFuerza(),
+                        targetPage: PlanFuerza(),
                       ),
                     ),
                   ],
@@ -99,8 +99,8 @@ class ObjetivoButton extends StatelessWidget {
     required this.label,
     required this.imagePath,
     required this.targetPage,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

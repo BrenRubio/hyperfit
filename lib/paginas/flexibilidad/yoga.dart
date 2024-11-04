@@ -27,7 +27,7 @@ class Actividad {
   String descripcion;
   int duracion; // en minutos
   String intensidad;
-  int agilidad; // mm de elasticidad
+  int agilidad; // calorías quemadas
 
   Actividad(this.nombre, this.descripcion, this.duracion, this.intensidad,
       this.agilidad);
@@ -120,7 +120,13 @@ class ActividadesYoga extends StatelessWidget {
             _buildInfoRow('Duración:', '${actividad.duracion} min'),
           ],
         ),
-        onTap: () => _mostrarConfirmacion(context, actividad),
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => TemporizadorScreen(actividad: actividad),
+            ),
+          );
+        },
       ),
     );
   }
@@ -148,38 +154,6 @@ class ActividadesYoga extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-
-  void _mostrarConfirmacion(BuildContext context, Actividad actividad) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Iniciar Actividad'),
-          content: Text('¿Deseas realizar ${actividad.nombre}?'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        TemporizadorScreen(actividad: actividad),
-                  ),
-                );
-              },
-              child: const Text('Sí'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('No'),
-            ),
-          ],
-        );
-      },
     );
   }
 }
@@ -240,34 +214,6 @@ class _TemporizadorScreenState extends State<TemporizadorScreen> {
     });
   }
 
-  Future<bool> _onWillPop() async {
-    bool? cancelar = await showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Cancelar Actividad'),
-          content:
-              const Text('¿Estás seguro de que deseas cancelar la actividad?'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(false); // No cancelar
-              },
-              child: const Text('No'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(true); // Cancelar
-              },
-              child: const Text('Sí'),
-            ),
-          ],
-        );
-      },
-    );
-    return cancelar ?? false; // Devuelve false si el usuario no responde
-  }
-
   void _registrarActividadCompletada() async {
     final user = FirebaseAuth.instance.currentUser;
 
@@ -311,6 +257,28 @@ class _TemporizadorScreenState extends State<TemporizadorScreen> {
     );
   }
 
+  Future<bool> _mostrarAlertaCancelar() async {
+    return showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Cancelar Actividad'),
+          content: const Text('¿Deseas cancelar la actividad?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text('No'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: const Text('Sí'),
+            ),
+          ],
+        );
+      },
+    ).then((value) => value ?? false);
+  }
+
   @override
   void dispose() {
     _timer.cancel();
@@ -319,15 +287,10 @@ class _TemporizadorScreenState extends State<TemporizadorScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      onPopInvoked: (didPop) {
-        // Llamada a `_onWillPop` de manera asincrónica
-        Future.delayed(Duration.zero, () async {
-          bool shouldPop = await _onWillPop();
-          if (shouldPop) {
-            Navigator.of(context).maybePop();
-          }
-        });
+    return WillPopScope(
+      onWillPop: () async {
+        final cancelar = await _mostrarAlertaCancelar();
+        return cancelar; // Si el usuario dice que sí, se permite salir
       },
       child: Scaffold(
         appBar: AppBar(
@@ -353,39 +316,44 @@ class _TemporizadorScreenState extends State<TemporizadorScreen> {
                 Text(
                   _formatearTiempo(segundosRestantes),
                   style: const TextStyle(
-                    fontSize: 48,
+                    fontSize: 60,
                     fontWeight: FontWeight.bold,
                     color: Colors.white, // Color del temporizador
                   ),
                 ),
                 const SizedBox(height: 20),
-                CircularProgressIndicator(
-                  value: progreso,
-                  strokeWidth: 10,
-                  valueColor: const AlwaysStoppedAnimation<Color>(
-                      Color.fromARGB(
-                          255, 255, 102, 0)), // Color de la barra circular
+                Container(
+                  width: 100, // Ajusta el ancho según sea necesario
+                  height: 100, // Ajusta la altura según sea necesario
+                  child: CircularProgressIndicator(
+                    value: progreso,
+                    backgroundColor: Colors.grey,
+                    valueColor: const AlwaysStoppedAnimation<Color>(
+                        Color.fromARGB(255, 255, 123, 0)),
+                    strokeWidth: 10, // Puedes ajustar el grosor si lo deseas
+                  ),
                 ),
-                const SizedBox(height: 40),
-                Column(
+                const SizedBox(height: 30),
+                Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    ElevatedButton.icon(
+                    IconButton(
                       onPressed: _pausarTemporizador,
-                      icon: const Icon(Icons.pause),
-                      label: const Text('Pausar'),
+                      icon: const Icon(Icons.pause,
+                          size: 50, color: Color.fromARGB(106, 192, 206, 203)),
+                      tooltip: 'Pausar',
                     ),
-                    const SizedBox(height: 10), // Espacio entre botones
-                    ElevatedButton.icon(
+                    IconButton(
                       onPressed: _reanudarTemporizador,
-                      icon: const Icon(Icons.play_arrow),
-                      label: const Text('Reanudar'),
+                      icon: const Icon(Icons.play_arrow,
+                          size: 50, color: Color.fromARGB(106, 192, 206, 203)),
+                      tooltip: 'Reanudar',
                     ),
-                    const SizedBox(height: 10), // Espacio entre botones
-                    ElevatedButton.icon(
+                    IconButton(
                       onPressed: _reiniciarTemporizador,
-                      icon: const Icon(Icons.restart_alt),
-                      label: const Text('Reiniciar'),
+                      icon: const Icon(Icons.refresh,
+                          size: 50, color: Color.fromARGB(106, 192, 206, 203)),
+                      tooltip: 'Reiniciar',
                     ),
                   ],
                 ),
@@ -398,8 +366,8 @@ class _TemporizadorScreenState extends State<TemporizadorScreen> {
   }
 
   String _formatearTiempo(int segundos) {
-    final minutos = segundos ~/ 60;
-    final segundosRestantes = segundos % 60;
-    return '${minutos.toString().padLeft(2, '0')}:${segundosRestantes.toString().padLeft(2, '0')}';
+    final minutos = (segundos ~/ 60).toString().padLeft(2, '0');
+    final segundosRestantes = (segundos % 60).toString().padLeft(2, '0');
+    return '$minutos:$segundosRestantes';
   }
 }

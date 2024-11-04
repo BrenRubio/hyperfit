@@ -155,6 +155,9 @@ class _ProgresoState extends State<Progreso> {
         autoScrollingMode: AutoScrollingMode.end,
         autoScrollingDelta: 4,
       ),
+      primaryYAxis: NumericAxis(
+        interval: 1,
+      ),
       zoomPanBehavior: ZoomPanBehavior(
         enablePanning: true,
         enableDoubleTapZooming: true,

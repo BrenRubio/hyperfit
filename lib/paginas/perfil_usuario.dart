@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_hyperfit/paginas/pantalla_principal.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'package:flutter/services.dart';
 
 class PerfilUsuario extends StatefulWidget {
   const PerfilUsuario({super.key, required String nombre});
@@ -285,6 +286,9 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
         keyboardType: isNumber ? TextInputType.number : TextInputType.text,
         maxLength: maxLength,
         readOnly: readOnly,
+        inputFormatters: isNumber
+            ? [FilteringTextInputFormatter.digitsOnly] // Solo permite números
+            : null,
         decoration: InputDecoration(
           labelText: label,
           labelStyle: const TextStyle(color: Colors.white),

@@ -45,44 +45,54 @@ class _InicioSesionState extends State<InicioSesion> {
       if (googleUser != null) {
         final GoogleSignInAuthentication googleAuth =
             await googleUser.authentication;
-        final AuthCredential credential = GoogleAuthProvider.credential(
-          accessToken: googleAuth.accessToken,
-          idToken: googleAuth.idToken,
-        );
-        UserCredential userCredential =
-            await _auth.signInWithCredential(credential);
-        User? user = userCredential.user;
 
-        if (user != null) {
-          // Verificar si el usuario ya existe en Firestore
-          final userDoc = await _firestore.collection('01').doc(user.uid).get();
+        // Verificar si el token de acceso y el ID token no son nulos
+        if (googleAuth.accessToken != null && googleAuth.idToken != null) {
+          final AuthCredential credential = GoogleAuthProvider.credential(
+            accessToken: googleAuth.accessToken,
+            idToken: googleAuth.idToken,
+          );
 
-          if (!userDoc.exists) {
-            // Si el usuario no existe, guardar la información del usuario en Firestore
-            await _firestore.collection('01').doc(user.uid).set({
-              'nombre': user.displayName,
-              'correo': user.email,
-            });
+          UserCredential userCredential =
+              await _auth.signInWithCredential(credential);
+          User? user = userCredential.user;
 
-            // Redirigir a la pantalla de crear perfil, pasando el nombre de Google
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => PerfilUsuario(
-                  nombre: user.displayName ?? '',
+          if (user != null) {
+            // Verificar si el usuario ya existe en Firestore
+            final userDoc =
+                await _firestore.collection('01').doc(user.uid).get();
+
+            if (!userDoc.exists) {
+              // Si el usuario no existe, guardar la información del usuario en Firestore
+              await _firestore.collection('01').doc(user.uid).set({
+                'nombre': user.displayName ??
+                    'Usuario', // Valor predeterminado si displayName es null
+                'correo': user.email,
+              });
+
+              // Redirigir a la pantalla de crear perfil, pasando el nombre de Google
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => PerfilUsuario(
+                    nombre: user.displayName ?? '',
+                  ),
                 ),
-              ),
-            );
-          } else {
-            // Si el usuario ya existe, redirigir a la pantalla principal
-            String nombre = userDoc.get('nombre');
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => PantallaPrincipal(nombre: nombre),
-              ),
-            );
+              );
+            } else {
+              // Si el usuario ya existe, redirigir a la pantalla principal
+              String nombre = userDoc.get('nombre') ??
+                  'Usuario'; // Valor predeterminado si es null
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => PantallaPrincipal(nombre: nombre),
+                ),
+              );
+            }
           }
+        } else {
+          _showAlert('Error al obtener las credenciales de Google.');
         }
       }
     } catch (e) {
@@ -155,7 +165,7 @@ class _InicioSesionState extends State<InicioSesion> {
           ),
         ),
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(25.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[

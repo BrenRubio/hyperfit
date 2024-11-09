@@ -28,7 +28,7 @@ if (flutterVersionName == null) {
 
 android {
     namespace = "com.example.flutter_hyperfit"
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = flutter.compileSdkVersion //34
     ndkVersion = flutter.ndkVersion
 
     compileOptions {

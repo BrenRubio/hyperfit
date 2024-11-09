@@ -35,10 +35,26 @@ class Actividad {
 
 class ActividadesNatacion extends StatelessWidget {
   final List<Actividad> actividades = [
-    Actividad("Actividad1", "Descripción", 1, "Baja", 300),
-    Actividad("Actividad2", "Descripción", 45, "Media", 250),
-    Actividad("Actividad3", "Descripción", 30, "Alta", 350),
-    Actividad("Actividad4", "Descripción", 60, "Media", 400),
+    Actividad(
+        "Natación suave",
+        "Nado relajado en estilo libre para mejorar la técnica sin mucho esfuerzo.",
+        30,
+        "Baja",
+        20),
+    Actividad(
+        "Nado a ritmo moderado",
+        "Nado continuo en estilo libre o braza, manteniendo un ritmo moderado.",
+        40,
+        "Media",
+        30),
+    Actividad("Nado de velocidad", " Interválo de nado rápido en estilo libre.",
+        35, "Alta", 40),
+    Actividad(
+        "Nado en estilo mariposa",
+        "Nado en estilo mariposa continuo que aumenta la quema calórica.",
+        30,
+        "Muy alta",
+        45),
   ];
 
   ActividadesNatacion({super.key});

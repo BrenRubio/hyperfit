@@ -35,10 +35,30 @@ class Actividad {
 
 class ActividadesPilates extends StatelessWidget {
   final List<Actividad> actividades = [
-    Actividad("Actividad1", "Descripción", 1, "Baja", 300),
-    Actividad("Actividad2", "Descripción", 45, "Media", 250),
-    Actividad("Actividad3", "Descripción", 30, "Alta", 350),
-    Actividad("Actividad4", "Descripción", 60, "Media", 400),
+    Actividad(
+        "Spine Twist",
+        "Sentado con las piernas juntas y los brazos extendidos, gira el torso hacia un lado sin mover las piernas, luego regresa al centro y cambia de lado.",
+        2,
+        "Baja",
+        1),
+    Actividad(
+        "Torsión de columna",
+        "Sentado con las piernas separadas, estira los brazos en línea recta y gira el torso para tocar el pie opuesto con una mano, alternando lados.",
+        2,
+        "Media",
+        2),
+    Actividad(
+        "Círculos de pierna",
+        "Acostado boca arriba, eleva una pierna recta hacia el techo y realiza círculos en el aire, alternando dirección y cambiando de pierna.",
+        3,
+        "Alta",
+        2),
+    Actividad(
+        "Estiramiento de sirena",
+        "Sentado con las piernas dobladas hacia un lado, estira el brazo opuesto sobre la cabeza e inclínate en esa dirección para alargar el lateral del torso. Cambia de lado.",
+        4,
+        "Alta",
+        2),
   ];
 
   ActividadesPilates({super.key});

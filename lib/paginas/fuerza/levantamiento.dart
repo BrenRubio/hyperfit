@@ -35,10 +35,30 @@ class Actividad {
 
 class ActividadesLevantamiento extends StatelessWidget {
   final List<Actividad> actividades = [
-    Actividad("Actividad1", "Descripción", 1, "Baja", 300),
-    Actividad("Actividad2", "Descripción", 45, "Media", 250),
-    Actividad("Actividad3", "Descripción", 30, "Alta", 350),
-    Actividad("Actividad4", "Descripción", 60, "Media", 400),
+    Actividad(
+        "Remo con barra",
+        "Flexiona las piernas ligeramente y tira de una barra hacia tu abdomen, concentrándote en la espalda.",
+        18,
+        "Baja",
+        1),
+    Actividad(
+        "Sentadillas con barra",
+        "Realiza sentadillas manteniendo una barra con pesas sobre los hombros.",
+        20,
+        "Media",
+        3),
+    Actividad(
+        "Peso muerto",
+        "Levanta una barra desde el suelo hasta la altura de las caderas con las piernas rectas y la espalda erguida.",
+        15,
+        "Alta",
+        3),
+    Actividad(
+        "Press de banca",
+        "Acostado en un banco, empuja una barra hacia arriba y hacia abajo con control.",
+        12,
+        "Muy alta",
+        3),
   ];
 
   ActividadesLevantamiento({super.key});

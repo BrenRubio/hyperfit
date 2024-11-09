@@ -35,10 +35,26 @@ class Actividad {
 
 class ActividadesCiclismo extends StatelessWidget {
   final List<Actividad> actividades = [
-    Actividad("Actividad1", "Descripción", 1, "Baja", 300),
-    Actividad("Actividad2", "Descripción", 45, "Media", 250),
-    Actividad("Actividad3", "Descripción", 30, "Alta", 350),
-    Actividad("Actividad4", "Descripción", 60, "Media", 400),
+    Actividad(
+        "Ciclismo suave (Terreno plano)",
+        "Pedaleo suave a un ritmo relajado en una superficie plana.",
+        30,
+        "Baja",
+        12),
+    Actividad(
+        "Ciclismo rápido en ruta",
+        "Pedaleo rápido y continuo en una ruta llana, manteniendo una velocidad constante",
+        45,
+        "Media",
+        20),
+    Actividad(
+        "Ciclismo de interválo",
+        "Alterna entre sprints rápidos y períodos de pedaleo suave.",
+        30,
+        "Alta",
+        35),
+    Actividad("Ciclismo en colina",
+        "Pedaleo en un terreno montañoso o inclinado.", 40, "Muy alta", 45),
   ];
 
   ActividadesCiclismo({super.key});

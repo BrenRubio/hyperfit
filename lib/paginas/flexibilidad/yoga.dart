@@ -35,10 +35,30 @@ class Actividad {
 
 class ActividadesYoga extends StatelessWidget {
   final List<Actividad> actividades = [
-    Actividad("Actividad1", "Descripción", 1, "Baja", 300),
-    Actividad("Actividad2", "Descripción", 45, "Media", 250),
-    Actividad("Actividad3", "Descripción", 30, "Alta", 350),
-    Actividad("Actividad4", "Descripción", 60, "Media", 400),
+    Actividad(
+        "Postura de la mariposa",
+        "Junta las plantas de los pies y lleva las rodillas hacia abajo, acercando los talones al cuerpo.",
+        2,
+        "Baja",
+        1),
+    Actividad(
+        "Estocada baja",
+        "Da un paso hacia adelante en una posición de estocada y baja la rodilla trasera al suelo, estirando la cadera.",
+        2,
+        "Media",
+        2),
+    Actividad(
+        "Flexión hacia adelante de pie",
+        "Inclina el torso hacia adelante y lleva las manos hacia el suelo, tratando de tocar los pies.",
+        2,
+        "Media",
+        2),
+    Actividad(
+        "Adho Mukha Svanasana",
+        "Desde una posición de plancha, eleva las caderas hacia el techo formando una “V” invertida, estirando la columna y las piernas.",
+        3,
+        "Media",
+        2),
   ];
 
   ActividadesYoga({super.key});

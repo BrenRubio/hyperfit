@@ -35,10 +35,30 @@ class Actividad {
 
 class ActividadesSenderismo extends StatelessWidget {
   final List<Actividad> actividades = [
-    Actividad("Actividad1", "Descripción", 1, "Baja", 300),
-    Actividad("Actividad2", "Descripción", 45, "Media", 250),
-    Actividad("Actividad3", "Descripción", 30, "Alta", 350),
-    Actividad("Actividad4", "Descripción", 60, "Media", 400),
+    Actividad(
+        "Caminata en sendero empinado",
+        "Subir y bajar un sendero empinado a un ritmo moderado.",
+        12,
+        "Baja",
+        5),
+    Actividad(
+        "Caminata en colina",
+        "ubir una colina con una inclinación moderada, manteniendo un ritmo constante.",
+        15,
+        "Media",
+        8),
+    Actividad(
+        "Caminata de resistencia con mochila",
+        "Caminata en terreno plano llevando una mochila con peso ligero.",
+        10,
+        "Alta",
+        6),
+    Actividad(
+        "Caminata con intervalos de velocidad",
+        "Alternar ritmo de caminata rápida y pausas en una ruta de senderismo.",
+        8,
+        "Muy alta",
+        7),
   ];
 
   ActividadesSenderismo({super.key});
@@ -227,7 +247,7 @@ class _TemporizadorScreenState extends State<TemporizadorScreen> {
         'descripcion': widget.actividad.descripcion,
         'duracion': widget.actividad.duracion,
         'intensidad': widget.actividad.intensidad,
-        'tiempo': widget.actividad.tiempo,
+        'calorias': widget.actividad.tiempo,
         'fecha': DateTime.now(),
       });
     }

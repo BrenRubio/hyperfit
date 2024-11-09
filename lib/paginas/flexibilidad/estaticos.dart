@@ -35,10 +35,30 @@ class Actividad {
 
 class ActividadesEstaticos extends StatelessWidget {
   final List<Actividad> actividades = [
-    Actividad("Actividad1", "Descripción", 1, "Baja", 300),
-    Actividad("Actividad2", "Descripción", 45, "Media", 250),
-    Actividad("Actividad3", "Descripción", 30, "Alta", 350),
-    Actividad("Actividad4", "Descripción", 60, "Media", 400),
+    Actividad(
+        "Estiramiento de cuádriceps en pie",
+        "De pie, toma un pie detrás de ti y acércalo a los glúteos, manteniendo la postura erguida.",
+        2,
+        "Baja",
+        1),
+    Actividad(
+        "Estiramiento del tronco hacia un lado",
+        "De pie o sentado, estira un brazo por encima de la cabeza e inclínate hacia el lado contrario.",
+        3,
+        "Baja",
+        1),
+    Actividad(
+        "Estiramiento de isquiotibiales en el suelo",
+        "Sentado en el suelo con las piernas extendidas, inclínate hacia adelante intentando tocar los pies.",
+        2,
+        "Media",
+        2),
+    Actividad(
+        "Estiramiento de aductores en mariposa",
+        "Sentado en el suelo, junta las plantas de los pies y baja las rodillas hacia el suelo.",
+        3,
+        "Media",
+        3),
   ];
 
   ActividadesEstaticos({super.key});

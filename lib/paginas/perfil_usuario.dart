@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_hyperfit/paginas/pantalla_principal.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';
 
@@ -105,12 +106,66 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
   }
 
   Future<void> _pickImage() async {
-    final ImagePicker picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _imageFile = File(pickedFile.path);
-      });
+    // Solicitar permisos
+    PermissionStatus permissionStatus = await Permission.photos.request();
+
+    if (permissionStatus.isGranted) {
+      // Permiso concedido, se puede acceder a la galería
+      final ImagePicker picker = ImagePicker();
+      final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+      if (pickedFile != null) {
+        setState(() {
+          _imageFile = File(pickedFile.path);
+        });
+      }
+    } else if (permissionStatus.isDenied) {
+      // Permiso denegado, mostrar alerta
+      _showPermissionDeniedAlert();
+    }
+  }
+
+  Future<void> _showPermissionDeniedAlert() async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Permiso Denegado'),
+          content: Text(
+              'Para seleccionar una imagen, es necesario otorgar permiso de acceso a tus fotos.'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                openAppSettings(); // Abrir la configuración para otorgar permisos
+              },
+              child: Text('Ir a Configuración'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancelar'),
+            ),
+          ],
+        );
+      },
+    );
+    PermissionStatus permissionStatus = await Permission.photos.status;
+    if (!permissionStatus.isGranted) {
+      permissionStatus = await Permission.photos.request();
+    }
+
+    if (permissionStatus.isGranted) {
+      // El permiso fue concedido completamente
+      final ImagePicker picker = ImagePicker();
+      final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+      if (pickedFile != null) {
+        setState(() {
+          _imageFile = File(pickedFile.path);
+        });
+      }
+    } else {
+      _showPermissionDeniedAlert();
     }
   }
 
@@ -120,6 +175,66 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
     });
   }
 
+  Future<void> _eliminarCuenta() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        await FirebaseFirestore.instance
+            .collection('01')
+            .doc(user.uid)
+            .delete();
+        await user.delete();
+
+        // Mostrar un mensaje informando que la cuenta fue eliminada
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Cuenta eliminada con éxito')),
+        );
+
+        // Mostrar la alerta de confirmación
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Cuenta eliminada'),
+              content: const Text(
+                  'Tu cuenta ha sido eliminada. Por favor, cierra sesión para salir.'),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    // Navegar a la pantalla de inicio de sesión
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PantallaPrincipal(
+                          nombre: '',
+                        ),
+                      ),
+                    );
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+
+        // Deshabilitar toda la interfaz excepto el botón de cerrar sesión
+        setState(() {
+          // Puedes usar un estado booleano para deshabilitar otros botones
+          // Por ejemplo, establecemos un flag "soloCerrarSesion" en true
+          // que puedes usar para deshabilitar otros widgets.
+          // Ejemplo:
+          // soloCerrarSesion = true;
+        });
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Error al eliminar la cuenta')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -127,11 +242,45 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
         automaticallyImplyLeading: false, // Quita la flecha de regreso
         title: const Center(
           child: Text(
-            'Perfil usuario',
+            '      Perfil usuario',
             style: TextStyle(color: Colors.white),
           ),
         ),
         backgroundColor: Colors.black,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.delete,
+                color: Color.fromARGB(255, 228, 25, 25)),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text("Eliminar cuenta"),
+                    content: const Text(
+                        "¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer."),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop(); // Cerrar el diálogo
+                        },
+                        child: const Text("Cancelar"),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop(); // Cerrar el diálogo
+                          _eliminarCuenta(); // Ejecutar la función de eliminación
+                        },
+                        child: const Text("Eliminar",
+                            style: TextStyle(color: Colors.red)),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+          ),
+        ],
       ),
       body: SafeArea(
         child: Container(

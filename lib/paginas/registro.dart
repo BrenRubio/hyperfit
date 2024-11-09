@@ -124,137 +124,140 @@ class _RegistroState extends State<Registro> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      // Asegura que el contenido se ajusta cuando el teclado está abierto
-      resizeToAvoidBottomInset: true,
-      body: SafeArea(
-        // Añadido SafeArea
-        child: SingleChildScrollView(
-          // Envuelve el contenido en SingleChildScrollView
-          child: Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Colors.black,
-                  Color.fromARGB(255, 18, 40, 51),
-                  Colors.black,
-                ],
-              ),
-            ),
-            padding: const EdgeInsets.all(16.0),
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                minHeight: MediaQuery.of(context).size.height -
-                    MediaQuery.of(context).padding.top -
-                    MediaQuery.of(context).padding.bottom,
-              ),
-              child: IntrinsicHeight(
-                // Asegura que el Column ocupe el espacio mínimo
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      'Registro',
-                      style: TextStyle(
-                        fontSize: 36,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                    const SizedBox(height: 40),
-                    // Campo de nombre
-                    _buildTextField(
-                      controller: _nameController,
-                      label: 'Nombre',
-                      obscureText: false,
-                    ),
-                    const SizedBox(height: 20),
-                    // Campo de correo
-                    _buildTextField(
-                      controller: _emailController,
-                      label: 'Correo electrónico',
-                      keyboardType: TextInputType.emailAddress,
-                      obscureText: false,
-                    ),
-                    const SizedBox(height: 20),
-                    // Campo de contraseña
-                    _buildTextField(
-                      controller: _passwordController,
-                      label: 'Contraseña',
-                      obscureText: _obscureText,
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _obscureText
-                              ? Icons.visibility_off
-                              : Icons.visibility,
-                          color: Colors.white,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _obscureText = !_obscureText;
-                          });
-                        },
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    // Campo de confirmar contraseña
-                    _buildTextField(
-                      controller: _confirmPasswordController,
-                      label: 'Confirmar Contraseña',
-                      obscureText: _obscureText,
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _obscureText
-                              ? Icons.visibility_off
-                              : Icons.visibility,
-                          color: Colors.white,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _obscureText = !_obscureText;
-                          });
-                        },
-                      ),
-                    ),
-                    const SizedBox(height: 40),
-                    // Botón de Registrarse
-                    ElevatedButton(
-                      onPressed: _register,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue[900],
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        shadowColor: Colors.black.withOpacity(0.5),
-                        elevation: 10,
-                      ),
-                      child: const Padding(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-                        child: Text(
-                          'Registrarse',
-                          style: TextStyle(fontSize: 18, color: Colors.white),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    // Botón de Cancelar
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  const inicio_sesion()), // Navegar a Registro
-                        );
-                      },
-                      style:
-                          TextButton.styleFrom(foregroundColor: Colors.white),
-                      child: const Text('Cancelar'),
-                    ),
+    return WillPopScope(
+      onWillPop: () async => false, // Bloquea la tecla de retroceso
+      child: Scaffold(
+        // Asegura que el contenido se ajusta cuando el teclado está abierto
+        resizeToAvoidBottomInset: true,
+        body: SafeArea(
+          // Añadido SafeArea
+          child: SingleChildScrollView(
+            // Envuelve el contenido en SingleChildScrollView
+            child: Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.black,
+                    Color.fromARGB(255, 18, 40, 51),
+                    Colors.black,
                   ],
+                ),
+              ),
+              padding: const EdgeInsets.all(16.0),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: MediaQuery.of(context).size.height -
+                      MediaQuery.of(context).padding.top -
+                      MediaQuery.of(context).padding.bottom,
+                ),
+                child: IntrinsicHeight(
+                  // Asegura que el Column ocupe el espacio mínimo
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'Registro',
+                        style: TextStyle(
+                          fontSize: 36,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                      const SizedBox(height: 40),
+                      // Campo de nombre
+                      _buildTextField(
+                        controller: _nameController,
+                        label: 'Nombre',
+                        obscureText: false,
+                      ),
+                      const SizedBox(height: 20),
+                      // Campo de correo
+                      _buildTextField(
+                        controller: _emailController,
+                        label: 'Correo electrónico',
+                        keyboardType: TextInputType.emailAddress,
+                        obscureText: false,
+                      ),
+                      const SizedBox(height: 20),
+                      // Campo de contraseña
+                      _buildTextField(
+                        controller: _passwordController,
+                        label: 'Contraseña',
+                        obscureText: _obscureText,
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscureText
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                            color: Colors.white,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _obscureText = !_obscureText;
+                            });
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      // Campo de confirmar contraseña
+                      _buildTextField(
+                        controller: _confirmPasswordController,
+                        label: 'Confirmar Contraseña',
+                        obscureText: _obscureText,
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscureText
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                            color: Colors.white,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _obscureText = !_obscureText;
+                            });
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 40),
+                      // Botón de Registrarse
+                      ElevatedButton(
+                        onPressed: _register,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue[900],
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          shadowColor: Colors.black.withOpacity(0.5),
+                          elevation: 10,
+                        ),
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 30, vertical: 10),
+                          child: Text(
+                            'Registrarse',
+                            style: TextStyle(fontSize: 18, color: Colors.white),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      // Botón de Cancelar
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const inicio_sesion()), // Navegar a Registro
+                          );
+                        },
+                        style:
+                            TextButton.styleFrom(foregroundColor: Colors.white),
+                        child: const Text('Cancelar'),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

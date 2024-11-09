@@ -150,164 +150,168 @@ class _InicioSesionState extends State<InicioSesion> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Colors.black,
-              Color.fromARGB(255, 18, 40, 51),
-              Colors.black,
-            ],
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Colors.black,
+                Color.fromARGB(255, 18, 40, 51),
+                Colors.black,
+              ],
+            ),
           ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(25.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              const Text(
-                'Inicio de Sesión',
-                style: TextStyle(
-                  fontSize: 36,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-              const SizedBox(height: 60),
-              // Campo de correo
-              Container(
-                decoration: BoxDecoration(
-                  color:
-                      const Color.fromARGB(255, 255, 123, 0).withOpacity(0.9),
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.2),
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: TextFormField(
-                  controller: _emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(
-                    labelText: 'Correo electrónico',
-                    labelStyle: TextStyle(color: Colors.white),
-                    border: InputBorder.none,
-                    contentPadding:
-                        EdgeInsets.symmetric(horizontal: 16, vertical: 18),
-                  ),
-                  style: const TextStyle(color: Colors.white),
-                ),
-              ),
-              const SizedBox(height: 20),
-              // Campo de contraseña
-              Container(
-                decoration: BoxDecoration(
-                  color:
-                      const Color.fromARGB(255, 255, 123, 0).withOpacity(0.9),
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.2),
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: TextFormField(
-                  controller: _passwordController,
-                  obscureText: _obscureText,
-                  decoration: InputDecoration(
-                    labelText: 'Contraseña',
-                    labelStyle: const TextStyle(color: Colors.white),
-                    border: InputBorder.none,
-                    contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 18),
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _obscureText ? Icons.visibility_off : Icons.visibility,
-                        color: Colors.white,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          _obscureText = !_obscureText;
-                        });
-                      },
-                    ),
-                  ),
-                  style: const TextStyle(color: Colors.white),
-                ),
-              ),
-              const SizedBox(height: 50),
-              ElevatedButton(
-                onPressed: _login,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue[900],
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  shadowColor: Colors.black.withOpacity(0.5),
-                  elevation: 10,
-                ),
-                child: const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 30, vertical: 12),
-                  child: Text(
-                    'Iniciar Sesión',
-                    style: TextStyle(fontSize: 18, color: Colors.white),
+          child: Padding(
+            padding: const EdgeInsets.all(25.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                const Text(
+                  'Inicio de Sesión',
+                  style: TextStyle(
+                    fontSize: 36,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
                   ),
                 ),
-              ),
-              const SizedBox(height: 20),
-              // Botón para iniciar sesión con Google
-              ElevatedButton.icon(
-                icon: const Icon(Icons.g_mobiledata),
-                onPressed: _signInWithGoogle,
-                label: const Text('Iniciar con Google'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color.fromARGB(255, 221, 39, 48),
-                  foregroundColor:
-                      Colors.white, // Cambia el color de texto y el icono
-                ),
-              ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      TextButton(
-                        onPressed: () {
-                          // Olvidaste contraseña
-                        },
-                        style:
-                            TextButton.styleFrom(foregroundColor: Colors.white),
-                        child: const Text('¿Olvidaste tu contraseña?'),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const Registro(),
-                            ),
-                          );
-                        },
-                        style:
-                            TextButton.styleFrom(foregroundColor: Colors.white),
-                        child: const Text('Registrarse'),
+                const SizedBox(height: 60),
+                // Campo de correo
+                Container(
+                  decoration: BoxDecoration(
+                    color:
+                        const Color.fromARGB(255, 255, 123, 0).withOpacity(0.9),
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
                       ),
                     ],
-                  )
-                ],
-              )
-            ],
+                  ),
+                  child: TextFormField(
+                    controller: _emailController,
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: const InputDecoration(
+                      labelText: 'Correo electrónico',
+                      labelStyle: TextStyle(color: Colors.white),
+                      border: InputBorder.none,
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+                    ),
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                // Campo de contraseña
+                Container(
+                  decoration: BoxDecoration(
+                    color:
+                        const Color.fromARGB(255, 255, 123, 0).withOpacity(0.9),
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: TextFormField(
+                    controller: _passwordController,
+                    obscureText: _obscureText,
+                    decoration: InputDecoration(
+                      labelText: 'Contraseña',
+                      labelStyle: const TextStyle(color: Colors.white),
+                      border: InputBorder.none,
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 18),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _obscureText
+                              ? Icons.visibility_off
+                              : Icons.visibility,
+                          color: Colors.white,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _obscureText = !_obscureText;
+                          });
+                        },
+                      ),
+                    ),
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                ),
+                const SizedBox(height: 50),
+                ElevatedButton(
+                  onPressed: _login,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue[900],
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    shadowColor: Colors.black.withOpacity(0.5),
+                    elevation: 10,
+                  ),
+                  child: const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 30, vertical: 12),
+                    child: Text(
+                      'Iniciar Sesión',
+                      style: TextStyle(fontSize: 18, color: Colors.white),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                // Botón para iniciar sesión con Google
+                ElevatedButton.icon(
+                  icon: const Icon(Icons.g_mobiledata),
+                  onPressed: _signInWithGoogle,
+                  label: const Text('Iniciar con Google'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color.fromARGB(255, 221, 39, 48),
+                    foregroundColor: Colors.white,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            // Olvidaste contraseña
+                          },
+                          style: TextButton.styleFrom(
+                              foregroundColor: Colors.white),
+                          child: const Text('¿Olvidaste tu contraseña?'),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const Registro(),
+                              ),
+                            );
+                          },
+                          style: TextButton.styleFrom(
+                              foregroundColor: Colors.white),
+                          child: const Text('Registrarse'),
+                        ),
+                      ],
+                    )
+                  ],
+                )
+              ],
+            ),
           ),
         ),
       ),

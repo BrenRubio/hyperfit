@@ -35,10 +35,26 @@ class Actividad {
 
 class ActividadesAerobics extends StatelessWidget {
   final List<Actividad> actividades = [
-    Actividad("Actividad1", "Descripción", 1, "Baja", 300),
-    Actividad("Actividad2", "Descripción", 45, "Media", 250),
-    Actividad("Actividad3", "Descripción", 30, "Alta", 350),
-    Actividad("Actividad4", "Descripción", 60, "Media", 400),
+    Actividad("Aeróbicos suaves",
+        "Caminar rápido o realizar movimientos suaves", 30, "Baja", 5),
+    Actividad(
+        "Aeróbicos de ritmo rápido",
+        "Bailar o realizar movimientos de cardio intenso con poco descanso.",
+        55,
+        "Media",
+        10),
+    Actividad(
+        "Aeróbicos de alta intensidad",
+        "Saltos y carreras en el lugar para elevar el ritmo cardíaco.",
+        30,
+        "Alta",
+        25),
+    Actividad(
+        "Aeróbicos con saltos",
+        "Incorporación de saltos y giros en los movimientos.",
+        40,
+        "Muy alta",
+        37),
   ];
 
   ActividadesAerobics({super.key});

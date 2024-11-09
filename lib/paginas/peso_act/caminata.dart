@@ -35,10 +35,30 @@ class Actividad {
 
 class ActividadesCaminata extends StatelessWidget {
   final List<Actividad> actividades = [
-    Actividad("Actividad1", "Descripción", 1, "Baja", 300),
-    Actividad("Actividad2", "Descripción", 45, "Media", 250),
-    Actividad("Actividad3", "Descripción", 30, "Alta", 350),
-    Actividad("Actividad4", "Descripción", 60, "Media", 400),
+    Actividad(
+        "Caminata suave",
+        "Caminata relajada en terreno plano, ideal para principiantes.",
+        30,
+        "Baja",
+        12),
+    Actividad(
+        "Caminata rápida",
+        "Caminata a ritmo acelerado en terreno llano para elevar el ritmo cardíaco sin correr.",
+        40,
+        "Media",
+        20),
+    Actividad(
+        "Caminata en Colina",
+        "Caminata en terreno inclinado o con escaleras para incrementar el esfuerzo.",
+        30,
+        "Alta",
+        30),
+    Actividad(
+        "Caminata con interválo",
+        "Alternar entre caminata rápida y caminata moderada.",
+        45,
+        "Muy alta",
+        35),
   ];
 
   ActividadesCaminata({super.key});

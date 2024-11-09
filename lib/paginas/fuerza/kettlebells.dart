@@ -35,10 +35,30 @@ class Actividad {
 
 class ActividadesKettlebells extends StatelessWidget {
   final List<Actividad> actividades = [
-    Actividad("Actividad1", "Descripción", 1, "Baja", 300),
-    Actividad("Actividad2", "Descripción", 45, "Media", 250),
-    Actividad("Actividad3", "Descripción", 30, "Alta", 350),
-    Actividad("Actividad4", "Descripción", 60, "Media", 400),
+    Actividad(
+        "Sentadillas con kettlebell",
+        " Sostén el kettlebell frente al pecho y realiza sentadillas profundas, manteniendo el torso erguido.",
+        12,
+        "Media",
+        2),
+    Actividad(
+        "Press de hombro con kettlebell",
+        "Sostén el kettlebell a la altura del hombro y empuja hacia arriba, trabajando el hombro y los tríceps.",
+        10,
+        "Media",
+        2),
+    Actividad(
+        "Swing con kettlebell",
+        "Balancea el kettlebell entre las piernas y luego hacia adelante, utilizando la cadera para generar el movimiento.",
+        15,
+        "Alta",
+        3),
+    Actividad(
+        "Remo con kettlebell",
+        "En posición de lunge o en un banco, jala el kettlebell hacia el torso, trabajando la espalda y los bíceps.",
+        18,
+        "Alta",
+        4),
   ];
 
   ActividadesKettlebells({super.key});

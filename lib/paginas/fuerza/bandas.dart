@@ -35,10 +35,30 @@ class Actividad {
 
 class ActividadesBandas extends StatelessWidget {
   final List<Actividad> actividades = [
-    Actividad("Actividad1", "Descripción", 1, "Baja", 300),
-    Actividad("Actividad2", "Descripción", 45, "Media", 250),
-    Actividad("Actividad3", "Descripción", 30, "Alta", 350),
-    Actividad("Actividad4", "Descripción", 60, "Media", 400),
+    Actividad(
+        "Estiramiento de banda para espalda",
+        "Sujeta la banda con ambas manos y estírala hacia atrás para trabajar los músculos de la espalda.",
+        10,
+        "Baja",
+        1),
+    Actividad(
+        "Sentadillas con banda de resistencia",
+        "Coloca una banda de resistencia alrededor de las piernas y realiza sentadillas, empujando las rodillas hacia afuera para aumentar la tensión.",
+        12,
+        "Media",
+        2),
+    Actividad(
+        "Elevación lateral de hombros con banda",
+        "Pisa la banda y eleva los brazos hacia los lados, trabajando los músculos del hombro.",
+        15,
+        "Media",
+        2),
+    Actividad(
+        "Flexiones con banda de resistencia",
+        "Coloca una banda de resistencia sobre tu espalda y sujeta los extremos con las manos mientras realizas flexiones, agregando tensión extra.",
+        18,
+        "Alta",
+        3),
   ];
 
   ActividadesBandas({super.key});

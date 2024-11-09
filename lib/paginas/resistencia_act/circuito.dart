@@ -35,10 +35,18 @@ class Actividad {
 
 class ActividadesCircuito extends StatelessWidget {
   final List<Actividad> actividades = [
-    Actividad("Actividad1", "Descripción", 1, "Baja", 300),
-    Actividad("Actividad2", "Descripción", 45, "Media", 250),
-    Actividad("Actividad3", "Descripción", 30, "Alta", 350),
-    Actividad("Actividad4", "Descripción", 60, "Media", 400),
+    Actividad("Sentadillas con peso",
+        "Ejercicio de sentadillas con mancuernas ligeras.", 6, "Baja", 2),
+    Actividad("Jumping jacks",
+        "Ejercicio de saltos con apertura de brazos y piernas.", 5, "Media", 3),
+    Actividad("Mountain climbers",
+        "Movimiento continuo de piernas en posición de plancha.", 4, "Alta", 4),
+    Actividad(
+        "Burpees",
+        "Combina una sentadilla, salto y flexión en un solo movimiento.",
+        3,
+        "Muy alta",
+        5),
   ];
 
   ActividadesCircuito({super.key});
@@ -227,7 +235,7 @@ class _TemporizadorScreenState extends State<TemporizadorScreen> {
         'descripcion': widget.actividad.descripcion,
         'duracion': widget.actividad.duracion,
         'intensidad': widget.actividad.intensidad,
-        'tiempo': widget.actividad.tiempo,
+        'calorias': widget.actividad.tiempo,
         'fecha': DateTime.now(),
       });
     }

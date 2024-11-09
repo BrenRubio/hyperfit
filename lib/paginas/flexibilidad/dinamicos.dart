@@ -35,10 +35,30 @@ class Actividad {
 
 class ActividadesDinamicas extends StatelessWidget {
   final List<Actividad> actividades = [
-    Actividad("Actividad1", "Descripción", 1, "Baja", 300),
-    Actividad("Actividad2", "Descripción", 45, "Media", 250),
-    Actividad("Actividad3", "Descripción", 30, "Alta", 350),
-    Actividad("Actividad4", "Descripción", 60, "Media", 400),
+    Actividad(
+        "Balanceo de piernas",
+        "Realiza estocadas hacia adelante alternando piernas y manteniendo el torso recto.",
+        4,
+        "Baja",
+        1),
+    Actividad(
+        "Estocadas dinámicas",
+        "Realiza estocadas hacia adelante alternando piernas y manteniendo el torso recto",
+        3,
+        "Media",
+        2),
+    Actividad(
+        "Sentadillas con apertura de piernas",
+        "Realiza una sentadilla y al levantarte, abre una pierna hacia un lado, alternando en cada repetición.",
+        4,
+        "Media",
+        3),
+    Actividad(
+        "Desplazamiento lateral",
+        "Da pasos laterales amplios manteniendo una postura baja en cada paso.",
+        3,
+        "Alta",
+        3),
   ];
 
   ActividadesDinamicas({super.key});

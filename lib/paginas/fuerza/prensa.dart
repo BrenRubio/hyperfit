@@ -35,10 +35,30 @@ class Actividad {
 
 class ActividadesPrensa extends StatelessWidget {
   final List<Actividad> actividades = [
-    Actividad("Actividad1", "Descripción", 1, "Baja", 300),
-    Actividad("Actividad2", "Descripción", 45, "Media", 250),
-    Actividad("Actividad3", "Descripción", 30, "Alta", 350),
-    Actividad("Actividad4", "Descripción", 60, "Media", 400),
+    Actividad(
+        "Prensa de piernas en posición ancha",
+        "Coloca los pies más anchos en la plataforma para activar más los músculos de la parte interna de los muslos.",
+        18,
+        "Media",
+        3),
+    Actividad(
+        "Prensa de piernas unilateral",
+        "Utiliza una pierna a la vez para empujar la plataforma, trabajando cada pierna de manera independiente.",
+        10,
+        "Alta",
+        4),
+    Actividad(
+        "Prensa de piernas tradicional",
+        "Coloca los pies en la plataforma de la prensa de piernas y empuja el peso hacia arriba mientras extiendes las piernas.",
+        15,
+        "Alta",
+        5),
+    Actividad(
+        "Prensa de piernas con los pies en posición alta",
+        "Coloca los pies más arriba en la plataforma para enfocarte más en los músculos de los glúteos y los isquiotibiales.",
+        12,
+        "Muy alta",
+        6),
   ];
 
   ActividadesPrensa({super.key});

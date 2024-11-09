@@ -133,7 +133,7 @@ class _InicioSesionState extends State<InicioSesion> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Error'),
+          title: const Text('Recuperar contraseña'),
           content: Text(message),
           actions: <Widget>[
             TextButton(
@@ -286,8 +286,22 @@ class _InicioSesionState extends State<InicioSesion> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         TextButton(
-                          onPressed: () {
-                            // Olvidaste contraseña
+                          onPressed: () async {
+                            String email = _emailController.text;
+                            if (email.isEmpty) {
+                              _showAlert(
+                                  'Por favor ingresa tu correo electrónico');
+                              return;
+                            }
+
+                            try {
+                              await _auth.sendPasswordResetEmail(email: email);
+                              _showAlert(
+                                  'Se ha enviado un correo para restablecer tu contraseña');
+                            } catch (e) {
+                              _showAlert(
+                                  'Error al enviar el correo: ${e.toString()}');
+                            }
                           },
                           style: TextButton.styleFrom(
                               foregroundColor: Colors.white),

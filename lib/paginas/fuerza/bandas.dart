@@ -342,7 +342,7 @@ class _TemporizadorScreenState extends State<TemporizadorScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                Container(
+                SizedBox(
                   width: 100, // Ajusta el ancho según sea necesario
                   height: 100, // Ajusta la altura según sea necesario
                   child: CircularProgressIndicator(

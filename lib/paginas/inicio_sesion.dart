@@ -274,7 +274,7 @@ class _InicioSesionState extends State<InicioSesion> {
                   onPressed: _signInWithGoogle,
                   label: const Text('Iniciar con Google'),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromARGB(255, 221, 39, 48),
+                    backgroundColor: const Color.fromARGB(255, 221, 39, 48),
                     foregroundColor: Colors.white,
                   ),
                 ),

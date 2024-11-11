@@ -129,8 +129,8 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Permiso Denegado'),
-          content: Text(
+          title: const Text('Permiso Denegado'),
+          content: const Text(
               'Para seleccionar una imagen, es necesario otorgar permiso de acceso a tus fotos.'),
           actions: <Widget>[
             TextButton(
@@ -138,13 +138,13 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
                 Navigator.of(context).pop();
                 openAppSettings(); // Abrir la configuración para otorgar permisos
               },
-              child: Text('Ir a Configuración'),
+              child: const Text('Ir a Configuración'),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Cancelar'),
+              child: const Text('Cancelar'),
             ),
           ],
         );
@@ -206,7 +206,7 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => PantallaPrincipal(
+                        builder: (context) => const PantallaPrincipal(
                           nombre: '',
                         ),
                       ),
